@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".news.view.NewsFragment">
+    tools:context=".news.view.NewsFragment"
+    android:background="@color/lightGray">
     <HorizontalScrollView
         android:id="@+id/channelSelectorBar"
         android:layout_width="match_parent"
