@@ -6,6 +6,7 @@ import com.redoc.yuedu.R;
 import com.redoc.yuedu.bean.Category;
 import com.redoc.yuedu.bean.MultiChannelCategory;
 import com.redoc.yuedu.bean.SingleChannelCategory;
+import com.redoc.yuedu.news.controller.NewsChannelsManager;
 import com.redoc.yuedu.view.MultiChannelCategoryFragment;
 import com.redoc.yuedu.view.SingleChannelCategoryFragment;
 
@@ -41,7 +42,7 @@ public class CategoriesManager {
             Fragment fragment = null;
             switch (categoryName) {
                 case "首页": {
-                    fragment = new MultiChannelCategoryFragment();
+                    fragment = MultiChannelCategoryFragment.newInstance(new NewsChannelsManager());
                     break;
                 }
                 case "音频": {
