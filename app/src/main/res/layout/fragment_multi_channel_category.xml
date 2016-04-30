@@ -1,0 +1,28 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".news.view.NewsFragment">
+    <HorizontalScrollView
+        android:id="@+id/channelSelectorBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/channel_selector_bar_height"
+        android:background="@color/red"
+        android:scrollbars="none">
+        <LinearLayout
+            android:id="@+id/channelSelectors"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/channel_item_height"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/channel_selector_bar_horizontal_padding"
+            android:paddingRight="@dimen/channel_selector_bar_horizontal_padding" />
+    </HorizontalScrollView>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/digestViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/channelSelectorBar">
+    </android.support.v4.view.ViewPager>
+</RelativeLayout>
