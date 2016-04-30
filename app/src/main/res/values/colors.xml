@@ -3,4 +3,14 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="black_overlay">#66000000</color>
+
+    <!--Digest activity's category selector bar-->
+    <color name="lightGray">#F0F0F0</color>
+
+    <color name="red">#CC0000</color>
+
+    <!--Digest activity's viewpager background-->
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
 </resources>
