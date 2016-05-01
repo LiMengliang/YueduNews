@@ -1,9 +1,8 @@
 package com.redoc.yuedu.news.controller;
 
-import android.support.v4.app.Fragment;
-
 import com.redoc.yuedu.bean.Channel;
 import com.redoc.yuedu.controller.ChannelsManager;
+import com.redoc.yuedu.controller.DigestsAdapter;
 import com.redoc.yuedu.news.bean.AllNewsChannels;
 import com.redoc.yuedu.news.bean.NewsChannel;
 import com.redoc.yuedu.view.ChannelFragment;
@@ -11,6 +10,7 @@ import com.redoc.yuedu.view.ChannelFragment;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by limen on 2016/4/30.
@@ -20,6 +20,8 @@ public class NewsChannelsManager extends ChannelsManager {
     public HashMap<String, NewsChannel> getAllChannels() {
         return allChannels;
     }
+
+    private Map<Channel, DigestsAdapter> channelAndDigestsAdapterMap = new HashMap<Channel, DigestsAdapter>();
 
     private List<NewsChannel> userSelectedChannels;
     public NewsChannelsManager() {
@@ -57,5 +59,15 @@ public class NewsChannelsManager extends ChannelsManager {
     @Override
     public Channel getUserSelectedChannelByPosition(int position) {
         return userSelectedChannels.get(position);
+    }
+
+    @Override
+    protected DigestsAdapter getSupportDigestsAdapter(Channel channel) {
+        // TODO: Different channel may have different digest adapter
+        if(!channelAndDigestsAdapterMap.containsKey(channel) && channel.getClass() == NewsChannel.class) {
+            DigestsAdapter digestsManager = new NewsDigestsAdapter((NewsChannel)channel);
+            channelAndDigestsAdapterMap.put(channel,digestsManager);
+        }
+        return channelAndDigestsAdapterMap.get(channel);
     }
 }

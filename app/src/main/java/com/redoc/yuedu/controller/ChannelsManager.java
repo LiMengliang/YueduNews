@@ -20,7 +20,7 @@ public abstract class ChannelsManager {
             return channelFragmentMap.get(channel);
         }
         else {
-            ChannelFragment fragment = DigestsChannelFragment.newInstance();
+            ChannelFragment fragment = DigestsChannelFragment.newInstance(getSupportDigestsAdapter(channel));
             channelFragmentMap.put(channel, fragment);
             return fragment;
         }
@@ -31,4 +31,6 @@ public abstract class ChannelsManager {
     public abstract void addUserSelectedChannel(Channel channel);
 
     public abstract Channel getUserSelectedChannelByPosition(int position);
+
+    protected abstract DigestsAdapter getSupportDigestsAdapter(Channel channel);
 }

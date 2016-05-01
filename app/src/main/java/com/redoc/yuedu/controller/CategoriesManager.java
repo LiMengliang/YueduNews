@@ -21,7 +21,6 @@ public class CategoriesManager {
     private MultiChannelCategory news = new MultiChannelCategory("首页", R.drawable.category_main);
     private SingleChannelCategory audio = new SingleChannelCategory("音频", R.drawable.category_audio);
 
-
     private Map<Category, Fragment> categoriesAndFragments = new HashMap<Category, Fragment>();
     private ArrayList<Category> categories = new ArrayList<Category>() {
         {

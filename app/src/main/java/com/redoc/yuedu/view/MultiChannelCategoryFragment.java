@@ -36,17 +36,11 @@ public class MultiChannelCategoryFragment extends Fragment {
 
     private View mRootView;
     private ViewPager mChannelsViewPager;
-    // private ArrayList<NewsChannelFragment> mChannelsFragments;
     private LinearLayout mChannelSelectors;
     private HorizontalScrollView mHorizontalScrollView;
     private DisplayMetrics mDisplayMatrix;
     private Activity mActivity;
-
-
     private ChannelAdapter channelAdapter;
-    public void setChannelAdapter(ChannelAdapter channelAdapter) {
-        this.channelAdapter = channelAdapter;
-    }
 
     private ChannelsManager channelManager;
     public void setChannelsManager(ChannelsManager channelsManager) {
@@ -122,6 +116,7 @@ public class MultiChannelCategoryFragment extends Fragment {
         ChannelFragment channelFragment = channelManager.getOrCreateFragmentForChannel(selectedChannel);
         if(channelFragment.shouldRefreshChannel()) {
             // selectedChannel.getNewsDigestsManager().fetchLatestNews(getContext());
+
         }
         // Scroll channel selector
         for (int i = 0; i < mChannelSelectors.getChildCount(); i++) {
