@@ -1,7 +1,5 @@
 package com.redoc.yuedu.view;
 
-import android.content.DialogInterface;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +26,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private CategoriesManager categoriesManager = new CategoriesManager();
+    private CategoriesManager categoriesManager = new CategoriesManager(this);
     private LinearLayout categorySelectorBar;
     private LayoutInflater layoutInflater;
     private Map<View, Category> categoryButtonAndName = new HashMap<View, Category>();
@@ -52,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private void initializeCategories() {
         int index = 0;
         for(Category category : categoriesManager.getCategories()) {
-            View categoryButton = layoutInflater.inflate(R.layout.view_category_button, null);
+            View categoryButton = layoutInflater.inflate(R.layout.widget_category_button, null);
             TextView categoryNameTextView = (TextView) categoryButton.findViewById(R.id.category_name);
             categoryNameTextView.setText(category.getCategoryName());
             ImageView categoryIcon = (ImageView) categoryButton.findViewById(R.id.category_icon);

@@ -43,7 +43,7 @@ public class WebDigestsProvider implements DigestsProvider {
 
     @Override
     public void fetchMore(Channel channel, int index, Context context, DigestsAdapter digestsAdapter) {
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(channel.getHttpLink(0), null, onFetchMoreListener,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(channel.getHttpLink(index), null, onFetchMoreListener,
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {

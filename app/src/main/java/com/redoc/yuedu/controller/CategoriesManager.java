@@ -1,5 +1,6 @@
 package com.redoc.yuedu.controller;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 
 import com.redoc.yuedu.R;
@@ -18,6 +19,7 @@ import java.util.Map;
  * Created by limen on 2016/4/30.
  */
 public class CategoriesManager {
+    private Context context;
     private MultiChannelCategory news = new MultiChannelCategory("首页", R.drawable.category_main);
     private SingleChannelCategory audio = new SingleChannelCategory("音频", R.drawable.category_audio);
 
@@ -32,6 +34,10 @@ public class CategoriesManager {
         return categories;
     }
 
+    public CategoriesManager(Context context) {
+        this.context = context;
+    }
+
     public Fragment getOrCreateFragment(Category category) {
         String categoryName = category.getCategoryName();
         if(categoriesAndFragments.containsKey(categoryName)) {
@@ -41,7 +47,7 @@ public class CategoriesManager {
             Fragment fragment = null;
             switch (categoryName) {
                 case "首页": {
-                    fragment = MultiChannelCategoryFragment.newInstance(new NewsChannelsManager());
+                    fragment = MultiChannelCategoryFragment.newInstance(new NewsChannelsManager(context));
                     break;
                 }
                 case "音频": {

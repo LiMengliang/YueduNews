@@ -9,6 +9,7 @@ import com.redoc.yuedu.bean.Channel;
 import com.redoc.yuedu.controller.DigestsAdapter;
 import com.redoc.yuedu.controller.DigestsProvider;
 import com.redoc.yuedu.controller.WebDigestsProvider;
+import com.redoc.yuedu.news.View.NewsDigestView;
 import com.redoc.yuedu.news.bean.NewsChannel;
 import com.redoc.yuedu.news.bean.NewsDigest;
 import com.redoc.yuedu.news.bean.NewsDigestsJsonParser;
@@ -24,26 +25,28 @@ import java.util.List;
  */
 public class NewsDigestsAdapter extends DigestsAdapter {
 
+    private Context context;
     private NewsChannel channel;
     private int index = 0;
     private DigestsProvider digestsProvider;
     private List<NewsDigest> newsDigests;
 
-    public NewsDigestsAdapter(NewsChannel channel) {
+    public NewsDigestsAdapter(Context context, NewsChannel channel) {
+        this.context = context;
         this.channel = channel;
         digestsProvider = new WebDigestsProvider(new NewsDigestLatestResponseListener(), new NewsDigestMoreResponseListener());
         newsDigests = new ArrayList<NewsDigest>();
     }
 
     @Override
-    public void fetchLatest(Context context) {
+    public void fetchLatest() {
         // TODO: only use web provider when network is available
         digestsProvider.fetchLatest(channel, context, this);
         index += 20;
     }
 
     @Override
-    public void fetchMore(Context context) {
+    public void fetchMore() {
         // TODO: only use web provider when network is available
         digestsProvider.fetchMore(channel, index, context, this);
         index += 20;
@@ -51,7 +54,7 @@ public class NewsDigestsAdapter extends DigestsAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        return newsDigests.size();
     }
 
     @Override
@@ -66,7 +69,13 @@ public class NewsDigestsAdapter extends DigestsAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
+        if(convertView == null) {
+            NewsDigestView newsDigestView = new NewsDigestView(context);
+            convertView = newsDigestView.getRootView();
+            convertView.setTag(newsDigestView);
+        }
+        ((NewsDigestView)convertView.getTag()).updateView(newsDigests.get(position));
+        return convertView;
     }
 
     private void updateNewsDigstsToStart(List<NewsDigest> digests) {

@@ -53,7 +53,7 @@ public class DigestsChannelFragment extends ChannelFragment {
         mDigestsList.setAdapter(digestsAdapter);
         mDigestsList.setOnScrollListener(new DigestListOnScrollListener());
         // digestsAdapter.setAdaptedListView(mDigestsList);
-        digestsAdapter.fetchLatest(getActivity());
+        digestsAdapter.fetchLatest();
         fragmentCreated = true;
         return rootView;
     }
@@ -75,7 +75,7 @@ public class DigestsChannelFragment extends ChannelFragment {
         public void onScrollStateChanged(AbsListView view, int scrollState) {
             if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
                 if (view.getLastVisiblePosition() == view.getCount() - 1) {
-                    digestsAdapter.fetchMore(getActivity());
+                    digestsAdapter.fetchMore();
                 }
                 //                ((NewsDigestsAdapter)newsDigestsAdapter).setIsDigestListViewScrolling(false);
                 //                int firstVisiblePosition = mDigestsList.getFirstVisiblePosition();
