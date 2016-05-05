@@ -40,8 +40,8 @@ public class CategoriesManager {
 
     public Fragment getOrCreateFragment(Category category) {
         String categoryName = category.getCategoryName();
-        if(categoriesAndFragments.containsKey(categoryName)) {
-            return categoriesAndFragments.get(categoryName);
+        if(categoriesAndFragments.containsKey(category)) {
+            return categoriesAndFragments.get(category);
         }
         else {
             Fragment fragment = null;

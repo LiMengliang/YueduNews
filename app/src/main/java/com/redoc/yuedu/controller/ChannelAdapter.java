@@ -3,6 +3,8 @@ package com.redoc.yuedu.controller;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.ViewGroup;
 
 import com.redoc.yuedu.bean.Channel;
 
@@ -12,7 +14,7 @@ import java.util.List;
 /**
  * Created by limen on 2016/4/30.
  */
-public class ChannelAdapter<T extends Channel> extends FragmentPagerAdapter {
+public class ChannelAdapter<T extends Channel> extends FragmentStatePagerAdapter {
     private List<? extends Channel> channels;
     private ChannelsManager channelsManager;
 
@@ -35,7 +37,18 @@ public class ChannelAdapter<T extends Channel> extends FragmentPagerAdapter {
     }
 
     @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
+    @Override
     public int getCount() {
         return channels.size();
+    }
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        Fragment obj = (Fragment)super.instantiateItem(container, position);
+        return obj;
     }
 }

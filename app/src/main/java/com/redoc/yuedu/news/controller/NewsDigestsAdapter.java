@@ -75,6 +75,7 @@ public class NewsDigestsAdapter extends DigestsAdapter {
             convertView.setTag(newsDigestView);
         }
         ((NewsDigestView)convertView.getTag()).updateView(newsDigests.get(position));
+        ((NewsDigestView)convertView.getTag()).LoadImages(newsDigests.get(position));
         return convertView;
     }
 

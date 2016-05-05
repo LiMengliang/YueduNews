@@ -104,6 +104,7 @@ public class MultiChannelCategoryFragment extends Fragment {
             mChannelSelectors.addView(textView, index++, params);
         }
         mChannelsViewPager.setAdapter(channelAdapter);
+        // TODO: When switch back to some old pager, the list view would be empty
         mChannelsViewPager.setOffscreenPageLimit(1);
         mChannelsViewPager.setCurrentItem(0);
         mChannelsViewPager.addOnPageChangeListener(new ChannelViewPagerChangedListener(this));
@@ -114,10 +115,10 @@ public class MultiChannelCategoryFragment extends Fragment {
          // Initialize channel digests list
         Channel selectedChannel = channelManager.getUserSelectedChannelByPosition(position);
         ChannelFragment channelFragment = channelManager.getOrCreateFragmentForChannel(selectedChannel);
-        if(channelFragment.shouldRefreshChannel()) {
+        // if(channelFragment.shouldRefreshChannel()) {
             // selectedChannel.getNewsDigestsManager().fetchLatestNews(getContext());
 
-        }
+        // }
         // Scroll channel selector
         for (int i = 0; i < mChannelSelectors.getChildCount(); i++) {
             View channelItem = mChannelSelectors.getChildAt(position);

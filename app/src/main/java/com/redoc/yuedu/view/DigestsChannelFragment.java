@@ -18,6 +18,8 @@ public class DigestsChannelFragment extends ChannelFragment {
     // private TextView mTextView;
     private ListView mDigestsList;
     private DigestsAdapter digestsAdapter;
+    private int lastFirstVisiblePosition = 0;
+    private final static String lastVisiblePosition = "VisiblePosition";
 
     /**
      * Use this factory method to create a new instance of
@@ -35,6 +37,9 @@ public class DigestsChannelFragment extends ChannelFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState != null) {
+            lastFirstVisiblePosition = savedInstanceState.getInt(lastVisiblePosition);
+        }
     }
 
     @Override
@@ -42,9 +47,9 @@ public class DigestsChannelFragment extends ChannelFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_digest_channel, container, false);
-        if(mDigestsList != null) {
-            return rootView;
-        }
+        // if(mDigestsList != null) {
+        //     return rootView;
+        // }
         // View digestListFootView = inflater.inflate(R.layout.view_digest_list_foot, container, false);
         mDigestsList = (ListView)rootView.findViewById(R.id.digestsList);
         TextView textView = new TextView(getContext());
@@ -53,19 +58,22 @@ public class DigestsChannelFragment extends ChannelFragment {
         mDigestsList.setAdapter(digestsAdapter);
         mDigestsList.setOnScrollListener(new DigestListOnScrollListener());
         // digestsAdapter.setAdaptedListView(mDigestsList);
-        digestsAdapter.fetchLatest();
+        if(shouldRefreshChannel()) {
+            digestsAdapter.fetchLatest();
+        }
         fragmentCreated = true;
         return rootView;
     }
 
-    public boolean reachTopOfAllNewsOrFirstInitiated() {
-        return mDigestsList == null || mDigestsList.getFirstVisiblePosition() == 0;
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(lastVisiblePosition, mDigestsList.getFirstVisiblePosition());
     }
 
     @Override
     public boolean shouldRefreshChannel() {
-        return false;
+        return lastFirstVisiblePosition == 0;
     }
 
     // TODO: This listener could be a public class, if we have different digest channel fragment.
@@ -77,24 +85,23 @@ public class DigestsChannelFragment extends ChannelFragment {
                 if (view.getLastVisiblePosition() == view.getCount() - 1) {
                     digestsAdapter.fetchMore();
                 }
-                //                ((NewsDigestsAdapter)newsDigestsAdapter).setIsDigestListViewScrolling(false);
-                //                int firstVisiblePosition = mDigestsList.getFirstVisiblePosition();
-                //                int lastVisiblePosition = mDigestsList.getLastVisiblePosition();
-                //                // TODO: need a digest view provider to be able to load image occording to different digest model type
-                //                // Test comments for oom
-                //                for(int i = 0; i < lastVisiblePosition - firstVisiblePosition; i++ ) {
-                //                    View digestRootView = mDigestsList.getChildAt(i);
-                //
-                //                    INewsDigestView digestView = ((NewsDigestsAdapter) newsDigestsAdapter).getExistingDigestViewWithoutImages(digestRootView);
-                //                    if(digestView != null) {
-                //                        digestView.loadDigestImages();
-                //                        ((NewsDigestsAdapter) newsDigestsAdapter).removeDigestViewWithImages(mDigestsList.getChildAt(i));
-                //                    }
-                //                }
-                //            }
-                //            else {
-                //                ((NewsDigestsAdapter)newsDigestsAdapter).setIsDigestListViewScrolling(true);
-                //            }
+                //     ((NewsDigestsAdapter)newsDigestsAdapter).setIsDigestListViewScrolling(false);
+                //     int firstVisiblePosition = mDigestsList.getFirstVisiblePosition();
+                //     int lastVisiblePosition = mDigestsList.getLastVisiblePosition();
+                //     // TODO: need a digest view provider to be able to load image occording to different digest model type
+                //     // Test comments for oom
+                //     for(int i = 0; i < lastVisiblePosition - firstVisiblePosition; i++ ) {
+                //         View digestRootView = mDigestsList.getChildAt(i);
+                //              INewsDigestView digestView = ((NewsDigestsAdapter) newsDigestsAdapter).getExistingDigestViewWithoutImages(digestRootView);
+                //         if(digestView != null) {
+                //             digestView.loadDigestImages();
+                //             ((NewsDigestsAdapter) newsDigestsAdapter).removeDigestViewWithImages(mDigestsList.getChildAt(i));
+                //         }
+                //     }
+                // }
+                // else {
+                //     ((NewsDigestsAdapter)newsDigestsAdapter).setIsDigestListViewScrolling(true);
+                // }
             }
         }
 
