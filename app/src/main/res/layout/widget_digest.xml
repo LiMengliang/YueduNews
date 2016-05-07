@@ -5,7 +5,10 @@
         android:id="@+id/single_image_digest"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp">
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
         <ImageView
             android:id="@+id/single_image_digest_image"
             style="@style/digestImage"/>
@@ -27,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/single_image_digest_title"
-                android:paddingTop="10dp"
+                android:paddingTop="8dp"
                 android:textSize="@dimen/small_size_text"
                 android:lines="2"
                 android:textColor="@color/black_overlay"/>
@@ -46,11 +49,15 @@
         android:id="@+id/multi_image_digest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp">
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
         <TextView
             android:id="@+id/multi_image_digest_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
             android:singleLine="true"
             android:textSize="@dimen/media_size_text"
             android:textColor="@color/black"/>
@@ -81,6 +88,52 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/image_row"
+            android:layout_alignParentRight="true"
+            android:paddingTop="5dp"
+            android:textSize="@dimen/small_size_text"
+            android:textColor="@color/black_overlay"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/photo_set_digest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+        <TextView
+            android:id="@+id/photo_set_digest_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:singleLine="true"
+            android:textSize="@dimen/media_size_text"
+            android:textColor="@color/black"/>
+        <RelativeLayout
+            android:id="@+id/image_area"
+            android:layout_below="@id/photo_set_digest_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/photo_set_digest_main_image"
+                style="@style/digest_main_image"
+                android:layout_marginRight="10dp"/>
+            <ImageView
+                android:id="@+id/photo_set_digest_right_image_a"
+                android:layout_marginBottom="10dp"
+                android:layout_toRightOf="@id/photo_set_digest_main_image"
+                style="@style/digestImage"/>
+            <ImageView
+                android:id="@+id/photo_set_digest_right_image_b"
+                android:layout_toRightOf="@id/photo_set_digest_main_image"
+                android:layout_below="@id/photo_set_digest_right_image_a"
+                style="@style/digestImage"/>
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/photo_set_digest_source"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/image_area"
             android:layout_alignParentRight="true"
             android:paddingTop="5dp"
             android:textSize="@dimen/small_size_text"

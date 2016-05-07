@@ -40,12 +40,13 @@ public class NewsDigestView implements DelayLoadImageControl {
     private ImageView multiImageDigestImageA;
     private ImageView multiImageDigestImageB;
     private ImageView multiImageDigestImageC;
-    private ImageLoader multiImageLoaderA;
-    private ImageLoader.ImageListener multiImageLoadListenerA;
-    private ImageLoader multiImageLoaderB;
-    private ImageLoader.ImageListener multiImageLoadListenerB;
-    private ImageLoader multiImageLoaderC;
-    private ImageLoader.ImageListener multiImageLoadListenerC;
+    // Photo set digest view
+    private RelativeLayout photoSetDigest;
+    private TextView photoSetDigestTitle;
+    private TextView photoSetDigestSource;
+    private ImageView photoSetDigestMainImage;
+    private ImageView photoSetDigestImageA;
+    private ImageView photoSetDigestImageB;
 
     private com.nostra13.universalimageloader.core.ImageLoader imageLoader;
 
@@ -68,6 +69,9 @@ public class NewsDigestView implements DelayLoadImageControl {
         if(digest.getDigestImages().size() == 1) {
             newsDigestViewType = SingleImage;
         }
+        else if(digest.getPhotoSetId() != null) {
+            newsDigestViewType = PhotSetDigest;
+        }
         else {
             newsDigestViewType = MultiImages;
         }
@@ -75,6 +79,7 @@ public class NewsDigestView implements DelayLoadImageControl {
             case SingleImage: {
                 multiImagesDigest.setVisibility(View.GONE);
                 singleImageDigest.setVisibility(View.VISIBLE);
+                photoSetDigest.setVisibility(View.GONE);
                 singleImageDigestTitle.setText(digest.getDigestTitle());
                 singleImageDigestContent.setText(digest.getDigest());
                 singleImageDigestSource.setText(digest.getSource());
@@ -83,9 +88,17 @@ public class NewsDigestView implements DelayLoadImageControl {
             case MultiImages: {
                 multiImagesDigest.setVisibility(View.VISIBLE);
                 singleImageDigest.setVisibility(View.GONE);
+                photoSetDigest.setVisibility(View.GONE);
                 multiImageDigestTitle.setText(digest.getDigestTitle());
                 multiImageDigestSource.setText(digest.getSource());
                 break;
+            }
+            case PhotSetDigest:{
+                multiImagesDigest.setVisibility(View.GONE);
+                singleImageDigest.setVisibility(View.GONE);
+                photoSetDigest.setVisibility(View.VISIBLE);
+                photoSetDigestTitle.setText(digest.getDigestTitle());
+                photoSetDigestSource.setText(digest.getSource());
             }
         }
     }
@@ -127,6 +140,12 @@ public class NewsDigestView implements DelayLoadImageControl {
                     imageLoader.displayImage(newsDigest.getDigestImages().get(2), multiImageDigestImageC, ImageLoaderOption.getListOptions());
                     break;
                 }
+                case PhotSetDigest: {
+                    imageLoader.displayImage(newsDigest.getDigestImages().get(0), photoSetDigestMainImage, ImageLoaderOption.getListOptions());
+                    imageLoader.displayImage(newsDigest.getDigestImages().get(1), photoSetDigestImageA, ImageLoaderOption.getListOptions());
+                    imageLoader.displayImage(newsDigest.getDigestImages().get(2), photoSetDigestImageB, ImageLoaderOption.getListOptions());
+                    break;
+                }
             }
         }
     }
@@ -147,14 +166,21 @@ public class NewsDigestView implements DelayLoadImageControl {
         multiImageDigestImageA = (ImageView)rootView.findViewById(R.id.multi_image_digest_image_a);
         multiImageDigestImageB = (ImageView)rootView.findViewById(R.id.multi_image_digest_image_b);
         multiImageDigestImageC = (ImageView)rootView.findViewById(R.id.multi_image_digest_image_c);
-        multiImageLoaderA = new ImageLoader(VolleyUtilities.RequestQueue, VolleyUtilities.BitmapCache);
-        multiImageLoadListenerA = ImageLoader.getImageListener(multiImageDigestImageA,
-                R.drawable.default_digset_image, R.drawable.default_digset_image);
-        multiImageLoaderB = new ImageLoader(VolleyUtilities.RequestQueue, VolleyUtilities.BitmapCache);
-        multiImageLoadListenerB = ImageLoader.getImageListener(multiImageDigestImageB,
-                R.drawable.default_digset_image, R.drawable.default_digset_image);
-        multiImageLoaderC = new ImageLoader(VolleyUtilities.RequestQueue, VolleyUtilities.BitmapCache);
-        multiImageLoadListenerC = ImageLoader.getImageListener(multiImageDigestImageC,
-                R.drawable.default_digset_image, R.drawable.default_digset_image);
+        // multiImageLoaderA = new ImageLoader(VolleyUtilities.RequestQueue, VolleyUtilities.BitmapCache);
+        // multiImageLoadListenerA = ImageLoader.getImageListener(multiImageDigestImageA,
+        //         R.drawable.default_digset_image, R.drawable.default_digset_image);
+        // multiImageLoaderB = new ImageLoader(VolleyUtilities.RequestQueue, VolleyUtilities.BitmapCache);
+        // multiImageLoadListenerB = ImageLoader.getImageListener(multiImageDigestImageB,
+        //         R.drawable.default_digset_image, R.drawable.default_digset_image);
+        // multiImageLoaderC = new ImageLoader(VolleyUtilities.RequestQueue, VolleyUtilities.BitmapCache);
+        // multiImageLoadListenerC = ImageLoader.getImageListener(multiImageDigestImageC,
+        //         R.drawable.default_digset_image, R.drawable.default_digset_image);
+
+        photoSetDigest = (RelativeLayout)rootView.findViewById(R.id.photo_set_digest);
+        photoSetDigestTitle = (TextView)rootView.findViewById(R.id.photo_set_digest_title);
+        photoSetDigestSource = (TextView)rootView.findViewById(R.id.photo_set_digest_source);
+        photoSetDigestImageA = (ImageView)rootView.findViewById(R.id.photo_set_digest_right_image_a);
+        photoSetDigestImageB = (ImageView)rootView.findViewById(R.id.photo_set_digest_right_image_b);
+        photoSetDigestMainImage = (ImageView)rootView.findViewById(R.id.photo_set_digest_main_image);
     }
 }

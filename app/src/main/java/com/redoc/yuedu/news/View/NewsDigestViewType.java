@@ -6,5 +6,5 @@ package com.redoc.yuedu.news.View;
 public enum NewsDigestViewType {
     SingleImage,
     MultiImages,
-    MultiImagesWithMain
+    PhotSetDigest
 }
