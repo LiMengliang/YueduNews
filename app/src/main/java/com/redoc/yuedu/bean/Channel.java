@@ -3,7 +3,7 @@ package com.redoc.yuedu.bean;
 /**
  * Created by limen on 2016/4/30.
  */
-public class Channel {
+public class Channel implements Comparable {
     private String channelId;
     public String getChannelId() {
         return channelId;
@@ -19,9 +19,29 @@ public class Channel {
         return String.format(httpLinkFormat, index);
     }
 
-    public Channel(String channelName, String channelId, String httpLinkFormat) {
+    private boolean selected;
+    public boolean isSelected() {
+        return selected;
+    }
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    private int weight;
+    public int getWeight() {
+        return weight;
+    }
+
+    public Channel(String channelName, String channelId, String httpLinkFormat, int weight) {
         this.channelId = channelId;
         this.channelName = channelName;
         this.httpLinkFormat = httpLinkFormat;
+        this.selected = false;
+        this.weight = weight;
+    }
+
+    @Override
+    public int compareTo(Object another) {
+        return weight - ((Channel) another).weight;
     }
 }

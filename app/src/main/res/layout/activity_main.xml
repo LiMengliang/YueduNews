@@ -12,8 +12,14 @@
         android:layout_alignParentBottom="true"
         android:background="@color/lightGray">
     </LinearLayout>
+    <View
+        android:id="@+id/separator"
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/gray"
+        android:layout_above="@id/categorySelectorBar"/>
     <FrameLayout android:id="@+id/contentView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/categorySelectorBar"/>
+        android:layout_above="@id/separator"/>
 </RelativeLayout>

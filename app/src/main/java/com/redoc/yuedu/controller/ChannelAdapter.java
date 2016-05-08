@@ -15,13 +15,13 @@ import java.util.List;
  * Created by limen on 2016/4/30.
  */
 public class ChannelAdapter<T extends Channel> extends FragmentStatePagerAdapter {
-    private List<? extends Channel> channels;
+    // private List<? extends Channel> channels;
     private ChannelsManager channelsManager;
 
     public ChannelAdapter(FragmentManager fragmentManager, ChannelsManager channelsManager) {
         super(fragmentManager);
         this.channelsManager = channelsManager;
-        this.channels = channelsManager.getUserSelectedChannels();
+        // this.channels = channelsManager.getSortedUserSelectedChannels();
     }
 
     public void addChannel(Channel channel) {//, NewsDigestsManager newsDigestsManager) {
@@ -29,10 +29,15 @@ public class ChannelAdapter<T extends Channel> extends FragmentStatePagerAdapter
         notifyDataSetChanged();
     }
 
+    public void removeChannel(Channel channel) {
+        channelsManager.removeUserSelectedChannel(channel);
+        notifyDataSetChanged();
+    }
+
     // TODO: Different channel may generate different fragment, we may need a fragment generator
     @Override
     public Fragment getItem(int position) {
-        Channel channel = channels.get(position);
+        Channel channel = channelsManager.getSortedUserSelectedChannels().get(position);
         return channelsManager.getOrCreateFragmentForChannel(channel);
     }
 
@@ -43,7 +48,7 @@ public class ChannelAdapter<T extends Channel> extends FragmentStatePagerAdapter
 
     @Override
     public int getCount() {
-        return channels.size();
+        return channelsManager.getSortedUserSelectedChannels().size();
     }
 
     @Override

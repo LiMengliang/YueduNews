@@ -109,40 +109,18 @@ public class NewsDigestView implements DelayLoadImageControl {
             NewsDigest newsDigest = (NewsDigest)digest;
             switch (newsDigestViewType) {
                 case SingleImage:{
-                    // ImageLoader imageLoader = new ImageLoader(VolleyUtilities.RequestQueue, VolleyUtilities.BitmapCache);
-                    // ImageLoader.ImageListener listener = ImageLoader.getImageListener(singleImageDigestImage,
-                    //         R.drawable.default_digset_image, R.drawable.default_digset_image);
-                    // imageLoader.get(newsDigest.getDigestImages().get(0), listener);
-
-                    // singleImageLoader.get(newsDigest.getDigestImages().get(0), singleImageLoadListener);
                     imageLoader.displayImage(newsDigest.getDigestImages().get(0), singleImageDigestImage, ImageLoaderOption.getListOptions());
                     break;
                 }
                 case MultiImages:{
-                    // ImageLoader imageLoader1 = new ImageLoader(VolleyUtilities.RequestQueue, VolleyUtilities.BitmapCache);
-                    // ImageLoader.ImageListener listener1 = ImageLoader.getImageListener(multiImageDigestImageA,
-                    //         R.drawable.default_digset_image, R.drawable.default_digset_image);
-                    // imageLoader1.get(newsDigest.getDigestImages().get(0), listener1);
-                    // ImageLoader imageLoader2 = new ImageLoader(VolleyUtilities.RequestQueue, VolleyUtilities.BitmapCache);
-                    // ImageLoader.ImageListener listener2 = ImageLoader.getImageListener(multiImageDigestImageB,
-                    //         R.drawable.default_digset_image, R.drawable.default_digset_image);
-                    // imageLoader2.get(newsDigest.getDigestImages().get(1), listener2);
-                    // ImageLoader imageLoader3 = new ImageLoader(VolleyUtilities.RequestQueue, VolleyUtilities.BitmapCache);
-                    // ImageLoader.ImageListener listener3 = ImageLoader.getImageListener(multiImageDigestImageC,
-                    //         R.drawable.default_digset_image, R.drawable.default_digset_image);
-                    // imageLoader3.get(newsDigest.getDigestImages().get(2), listener3);
-
-                    // multiImageLoaderA.get(newsDigest.getDigestImages().get(0), multiImageLoadListenerA);
-                    // multiImageLoaderB.get(newsDigest.getDigestImages().get(1), multiImageLoadListenerB);
-                    // multiImageLoaderC.get(newsDigest.getDigestImages().get(2), multiImageLoadListenerC);
                     imageLoader.displayImage(newsDigest.getDigestImages().get(0), multiImageDigestImageA, ImageLoaderOption.getListOptions());
                     imageLoader.displayImage(newsDigest.getDigestImages().get(1), multiImageDigestImageB, ImageLoaderOption.getListOptions());
                     imageLoader.displayImage(newsDigest.getDigestImages().get(2), multiImageDigestImageC, ImageLoaderOption.getListOptions());
                     break;
                 }
                 case PhotSetDigest: {
-                    imageLoader.displayImage(newsDigest.getDigestImages().get(0), photoSetDigestMainImage, ImageLoaderOption.getListOptions());
-                    imageLoader.displayImage(newsDigest.getDigestImages().get(1), photoSetDigestImageA, ImageLoaderOption.getListOptions());
+                    imageLoader.displayImage(newsDigest.getDigestImages().get(1), photoSetDigestMainImage, ImageLoaderOption.getListOptions());
+                    imageLoader.displayImage(newsDigest.getDigestImages().get(0), photoSetDigestImageA, ImageLoaderOption.getListOptions());
                     imageLoader.displayImage(newsDigest.getDigestImages().get(2), photoSetDigestImageB, ImageLoaderOption.getListOptions());
                     break;
                 }
@@ -166,15 +144,6 @@ public class NewsDigestView implements DelayLoadImageControl {
         multiImageDigestImageA = (ImageView)rootView.findViewById(R.id.multi_image_digest_image_a);
         multiImageDigestImageB = (ImageView)rootView.findViewById(R.id.multi_image_digest_image_b);
         multiImageDigestImageC = (ImageView)rootView.findViewById(R.id.multi_image_digest_image_c);
-        // multiImageLoaderA = new ImageLoader(VolleyUtilities.RequestQueue, VolleyUtilities.BitmapCache);
-        // multiImageLoadListenerA = ImageLoader.getImageListener(multiImageDigestImageA,
-        //         R.drawable.default_digset_image, R.drawable.default_digset_image);
-        // multiImageLoaderB = new ImageLoader(VolleyUtilities.RequestQueue, VolleyUtilities.BitmapCache);
-        // multiImageLoadListenerB = ImageLoader.getImageListener(multiImageDigestImageB,
-        //         R.drawable.default_digset_image, R.drawable.default_digset_image);
-        // multiImageLoaderC = new ImageLoader(VolleyUtilities.RequestQueue, VolleyUtilities.BitmapCache);
-        // multiImageLoadListenerC = ImageLoader.getImageListener(multiImageDigestImageC,
-        //         R.drawable.default_digset_image, R.drawable.default_digset_image);
 
         photoSetDigest = (RelativeLayout)rootView.findViewById(R.id.photo_set_digest);
         photoSetDigestTitle = (TextView)rootView.findViewById(R.id.photo_set_digest_title);

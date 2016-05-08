@@ -19,8 +19,8 @@ import java.util.Map;
  */
 public class NewsChannelsManager extends ChannelsManager {
     private Context context;
-    private HashMap<String, NewsChannel> allChannels;
-    public HashMap<String, NewsChannel> getAllChannels() {
+    private List<NewsChannel> allChannels;
+    protected List<NewsChannel> getAllChannels() {
         return allChannels;
     }
 
@@ -29,16 +29,41 @@ public class NewsChannelsManager extends ChannelsManager {
     private List<NewsChannel> userSelectedChannels;
     public NewsChannelsManager(Context context) {
         this.context = context;
-        userSelectedChannels = new ArrayList<NewsChannel>() {
+        allChannels = new ArrayList<NewsChannel>() {
             {
                 add(AllNewsChannels.headLine);
-                add(AllNewsChannels.sociaty);
                 add(AllNewsChannels.entertainment);
-                add(AllNewsChannels.cellphone);
-                add(AllNewsChannels.digital);
+                add(AllNewsChannels.finance);
+                add(AllNewsChannels.tech);
+                add(AllNewsChannels.cba);
+                add(AllNewsChannels.joke);
                 add(AllNewsChannels.automobile);
+                add(AllNewsChannels.fasion);
+                add(AllNewsChannels.beijin);
+                add(AllNewsChannels.war);
+                add(AllNewsChannels.realestate);
+                add(AllNewsChannels.eGame);
+                add(AllNewsChannels.pickOut);
+                add(AllNewsChannels.radio);
+                add(AllNewsChannels.emotion);
+                add(AllNewsChannels.movie);
+                add(AllNewsChannels.nba);
+                add(AllNewsChannels.digital);
+                add(AllNewsChannels.mobile);
+                add(AllNewsChannels.education);
+                add(AllNewsChannels.bbs);
+                add(AllNewsChannels.tourism);
+                add(AllNewsChannels.cellphone);
+                add(AllNewsChannels.sociaty);
             }
         };
+        userSelectedChannels = new ArrayList<NewsChannel>();
+        addUserSelectedChannel(AllNewsChannels.headLine);
+        addUserSelectedChannel(AllNewsChannels.sociaty);
+        addUserSelectedChannel(AllNewsChannels.entertainment);
+        addUserSelectedChannel(AllNewsChannels.cellphone);
+        addUserSelectedChannel(AllNewsChannels.digital);
+        addUserSelectedChannel(AllNewsChannels.automobile);
         addUserSelectedChannel(AllNewsChannels.realestate);
     }
 
@@ -49,7 +74,7 @@ public class NewsChannelsManager extends ChannelsManager {
     }
 
     @Override
-    public List<NewsChannel> getUserSelectedChannels() {
+    protected List<NewsChannel> getUserSelectedChannels() {
         return userSelectedChannels;
     }
 
@@ -57,12 +82,25 @@ public class NewsChannelsManager extends ChannelsManager {
     public void addUserSelectedChannel(Channel channel) {
         if(channel.getClass() == NewsChannel.class) {
             userSelectedChannels.add((NewsChannel)channel);
+            channel.setSelected(true);
+        }
+    }
+
+    @Override
+    public void removeUserSelectedChannel(Channel channel) {
+        if(channel.getClass() == NewsChannel.class) {
+            userSelectedChannels.remove(channel);
+            channel.setSelected(false);
         }
     }
 
     @Override
     public Channel getUserSelectedChannelByPosition(int position) {
-        return userSelectedChannels.get(position);
+        List<? extends Channel> sortedChannels = getSortedUserSelectedChannels();
+        if(sortedChannels == null || sortedChannels.size() == 0) {
+            return null;
+        }
+        return sortedChannels.get(position);
     }
 
     @Override

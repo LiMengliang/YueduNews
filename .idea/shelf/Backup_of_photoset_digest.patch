@@ -1,0 +1,276 @@
+Index: app/src/main/res/layout/widget_digest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/widget_digest.xml	(revision 47d4b44836a2adee1c4a8a621c294cb3eefdefdc)
++++ app/src/main/res/layout/widget_digest.xml	(revision )
+@@ -86,4 +86,40 @@
+             android:textSize="@dimen/small_size_text"
+             android:textColor="@color/black_overlay"/>
+     </RelativeLayout>
++    <!--<RelativeLayout
++        android:id="@+id/photoset_digest"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content">
++        <TextView
++            android:id="@+id/photoset_digest_title"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:singleLine="true"
++            android:textSize="@dimen/media_size_text"
++            android:textColor="@color/black"/>
++        <ImageView
++            android:id="@+id/photoset_digset_main_image"
++            android:layout_width="210dp"
++            android:layout_height="144dp"/>
++
++        <ImageView
++            android:id="@+id/photoset_digest_right_image_a"
++            style="@style/digestImage"
++            android:layout_toRightOf="@id/photoset_digset_main_image"
++            android:layout_below="@id/photoset_digest_title"/>
++        <ImageView
++            android:id="@+id/photoset_digest_right_image_b"
++            style="@style/digestImage"
++            android:layout_toRightOf="@id/photoset_digset_main_image"
++            android:layout_below="@id/photoset_digest_right_image_a"/>
++        <TextView
++            android:id="@+id/photoset_digset_source"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_below="@id/photoset_digset_main_image"
++            android:layout_alignParentRight="true"
++            android:paddingTop="5dp"
++            android:textSize="@dimen/small_size_text"
++            android:textColor="@color/black_overlay"/>
++    </RelativeLayout>-->
+ </FrameLayout>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/misc.xml	(revision 47d4b44836a2adee1c4a8a621c294cb3eefdefdc)
++++ .idea/misc.xml	(revision )
+@@ -1,10 +1,37 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
++  <component name="EntryPointsManager">
++    <entry_points version="2.0" />
++  </component>
+   <component name="MavenImportPreferences">
+     <option name="generalSettings">
+       <MavenGeneralSettings>
+         <option name="mavenHome" value="Bundled (Maven 3)" />
+       </MavenGeneralSettings>
++    </option>
++  </component>
++  <component name="NullableNotNullManager">
++    <option name="myDefaultNullable" value="android.support.annotation.Nullable" />
++    <option name="myDefaultNotNull" value="android.support.annotation.NonNull" />
++    <option name="myNullables">
++      <value>
++        <list size="4">
++          <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.Nullable" />
++          <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nullable" />
++          <item index="2" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.Nullable" />
++          <item index="3" class="java.lang.String" itemvalue="android.support.annotation.Nullable" />
++        </list>
++      </value>
++    </option>
++    <option name="myNotNulls">
++      <value>
++        <list size="4">
++          <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.NotNull" />
++          <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nonnull" />
++          <item index="2" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.NonNull" />
++          <item index="3" class="java.lang.String" itemvalue="android.support.annotation.NonNull" />
++        </list>
++      </value>
+     </option>
+   </component>
+   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+\ No newline at end of file
+Index: app/src/main/java/com/redoc/yuedu/news/View/NewsDigestViewType.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/redoc/yuedu/news/View/NewsDigestViewType.java	(revision 47d4b44836a2adee1c4a8a621c294cb3eefdefdc)
++++ app/src/main/java/com/redoc/yuedu/news/View/NewsDigestViewType.java	(revision )
+@@ -6,5 +6,5 @@
+ public enum NewsDigestViewType {
+     SingleImage,
+     MultiImages,
+-    MultiImagesWithMain
++    Photoset
+ }
+Index: app/src/main/res/values/styles.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values/styles.xml	(revision 47d4b44836a2adee1c4a8a621c294cb3eefdefdc)
++++ app/src/main/res/values/styles.xml	(revision )
+@@ -34,9 +34,15 @@
+         <item name ="android:layout_height">72dp</item>
+         <item name ="android:layout_weight">1</item>
+         <item name ="android:scaleType">centerCrop</item>
+-
+         <item name="android:background">@color/lightGray</item>
+     </style>
++
++    <!--<style name="digest_main_image">
++        <item name="android:layout_width">210dp</item>
++        <item name="android:layout_height">144dp</item>
++        <item name ="android:scaleType">centerCrop</item>
++        <item name="android:background">@color/lightGray</item>
++    </style>-->
+ 
+     <style name="channel_name_text">
+         <item name="android:textSize">20dp</item>
+\ No newline at end of file
+Index: app/src/main/res/values/dimens.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values/dimens.xml	(revision 47d4b44836a2adee1c4a8a621c294cb3eefdefdc)
++++ app/src/main/res/values/dimens.xml	(revision )
+@@ -17,6 +17,7 @@
+     <dimen name="channel_selector_bar_horizontal_padding">14dp</dimen>
+     <dimen name="digest_image_height">72dp</dimen>
+     <dimen name="digest_refresh_message_top_margin">24dp</dimen>
++    <dimen name="digest_main_image_width"></dimen>
+ 
+     <!--category button-->
+     <dimen name="left_margin">20dp</dimen>
+\ No newline at end of file
+Index: app/src/main/java/com/redoc/yuedu/news/View/NewsDigestView.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/redoc/yuedu/news/View/NewsDigestView.java	(revision 47d4b44836a2adee1c4a8a621c294cb3eefdefdc)
++++ app/src/main/java/com/redoc/yuedu/news/View/NewsDigestView.java	(revision )
+@@ -1,8 +1,6 @@
+ package com.redoc.yuedu.news.View;
+ 
+-import android.app.Application;
+ import android.content.Context;
+-import android.opengl.Visibility;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.widget.FrameLayout;
+@@ -17,7 +15,6 @@
+ import com.redoc.yuedu.utilities.network.ImageLoaderOption;
+ import com.redoc.yuedu.utilities.network.VolleyUtilities;
+ import com.redoc.yuedu.view.DelayLoadImageControl;
+-import com.redoc.yuedu.view.MainActivity;
+ 
+ import static com.redoc.yuedu.news.View.NewsDigestViewType.*;
+ 
+@@ -46,6 +43,13 @@
+     private ImageLoader.ImageListener multiImageLoadListenerB;
+     private ImageLoader multiImageLoaderC;
+     private ImageLoader.ImageListener multiImageLoadListenerC;
++    // Photo set digest view
++    private RelativeLayout photosetDigest;
++    private TextView photosetDigestTitle;
++    private TextView photosetDigestSource;
++    private ImageView photosetDigestMainImage;
++    private ImageView photosetDigestRightImageA;
++    private ImageView photosetDigestRightImageB;
+ 
+     private com.nostra13.universalimageloader.core.ImageLoader imageLoader;
+ 
+@@ -68,6 +72,9 @@
+         if(digest.getDigestImages().size() == 1) {
+             newsDigestViewType = SingleImage;
+         }
++        else if(digest.getPhotoSetId() != null) {
++            newsDigestViewType = Photoset;
++        }
+         else {
+             newsDigestViewType = MultiImages;
+         }
+@@ -75,6 +82,7 @@
+             case SingleImage: {
+                 multiImagesDigest.setVisibility(View.GONE);
+                 singleImageDigest.setVisibility(View.VISIBLE);
++                photosetDigest.setVisibility(View.GONE);
+                 singleImageDigestTitle.setText(digest.getDigestTitle());
+                 singleImageDigestContent.setText(digest.getDigest());
+                 singleImageDigestSource.setText(digest.getSource());
+@@ -83,12 +91,20 @@
+             case MultiImages: {
+                 multiImagesDigest.setVisibility(View.VISIBLE);
+                 singleImageDigest.setVisibility(View.GONE);
++                photosetDigest.setVisibility(View.GONE);
+                 multiImageDigestTitle.setText(digest.getDigestTitle());
+                 multiImageDigestSource.setText(digest.getSource());
+                 break;
+             }
++            case Photoset:{
++                multiImagesDigest.setVisibility(View.GONE);
++                singleImageDigest.setVisibility(View.GONE);
++                photosetDigest.setVisibility(View.VISIBLE);
++                photosetDigestTitle.setText(digest.getDigestTitle());
++                photosetDigestSource.setText(digest.getSource());
+-        }
+-    }
++            }
++        }
++    }
+ 
+     @Override
+     public void LoadImages(Digest digest) {
+@@ -127,9 +143,15 @@
+                     imageLoader.displayImage(newsDigest.getDigestImages().get(2), multiImageDigestImageC, ImageLoaderOption.getListOptions());
+                     break;
+                 }
++                case Photoset:{
++                    imageLoader.displayImage(newsDigest.getDigestImages().get(0), photosetDigestMainImage, ImageLoaderOption.getListOptions());
++                    imageLoader.displayImage(newsDigest.getDigestImages().get(1), photosetDigestRightImageA, ImageLoaderOption.getListOptions());
++                    imageLoader.displayImage(newsDigest.getDigestImages().get(2), photosetDigestRightImageB, ImageLoaderOption.getListOptions());
++                    break;
+-            }
+-        }
+-    }
++                }
++            }
++        }
++    }
+ 
+     private void initializeAllViews(View rootView) {
+         singleImageDigest = (RelativeLayout)rootView.findViewById(R.id.single_image_digest);
+@@ -156,5 +178,12 @@
+         multiImageLoaderC = new ImageLoader(VolleyUtilities.RequestQueue, VolleyUtilities.BitmapCache);
+         multiImageLoadListenerC = ImageLoader.getImageListener(multiImageDigestImageC,
+                 R.drawable.default_digset_image, R.drawable.default_digset_image);
++
++        // photosetDigest = (RelativeLayout)rootView.findViewById(R.id.photoset_digest);
++        // photosetDigestTitle = (TextView)rootView.findViewById(R.id.photoset_digest_title);
++        // photosetDigestSource = (TextView)rootView.findViewById(R.id.photoset_digset_source);
++        // photosetDigestMainImage = (ImageView)rootView.findViewById(R.id.photoset_digset_main_image);
++        // photosetDigestRightImageA = (ImageView)rootView.findViewById(R.id.photoset_digest_right_image_a);
++        // photosetDigestRightImageB = (ImageView)rootView.findViewById(R.id.photoset_digest_right_image_b);
+     }
+ }
+Index: app/src/main/java/com/redoc/yuedu/news/bean/NewsDigestsJsonParser.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/redoc/yuedu/news/bean/NewsDigestsJsonParser.java	(revision 47d4b44836a2adee1c4a8a621c294cb3eefdefdc)
++++ app/src/main/java/com/redoc/yuedu/news/bean/NewsDigestsJsonParser.java	(revision )
+@@ -23,6 +23,7 @@
+     public static final String imgsrc = "imgsrc";
+     public static final String url = "url";
+     public static final String photoSetId = "photosetID";
++    public static final String skipType = "skipType";
+ 
+     public static NewsDigestsJsonParser instance = new NewsDigestsJsonParser();
+ 

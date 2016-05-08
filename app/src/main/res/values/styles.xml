@@ -38,7 +38,7 @@
     </style>
 
     <style name="digest_main_image">
-        <item name="android:layout_width">220dp</item>
+        <item name="android:layout_width">225dp</item>
         <item name="android:layout_height">154dp</item>
         <item name ="android:scaleType">centerCrop</item>
         <item name="android:background">@color/lightGray</item>

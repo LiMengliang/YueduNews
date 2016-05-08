@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.redoc.yuedu.R;
 
 /**
@@ -39,6 +40,7 @@ public class ImageLoaderOption {
                 .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
                         // .displayer(new RoundedBitmapDisplayer(20))//是否设置为圆角，弧度为多少
                 .displayer(new FadeInBitmapDisplayer(100))// 淡入
+                .displayer(new RoundedBitmapDisplayer(7))
                 .build();
         return options;
     }

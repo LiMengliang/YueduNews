@@ -7,8 +7,10 @@
 
     <!--Digest activity's category selector bar-->
     <color name="lightGray">#F0F0F0</color>
+    <color name="gray">#CCCCCC</color>
 
-    <color name="red">#CC0000</color>
+    <!--<color name="red">#CC0000</color>-->
+    <color name="red">#00a497</color>
 
     <!--Digest activity's viewpager background-->
     <color name="white">#FFFFFFFF</color>

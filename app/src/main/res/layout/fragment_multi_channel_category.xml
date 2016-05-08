@@ -3,26 +3,86 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".news.view.NewsFragment">
-    <HorizontalScrollView
-        android:id="@+id/channelSelectorBar"
+    <RelativeLayout
+        android:id="@+id/multi_channel_category_head"
         android:layout_width="match_parent"
         android:layout_height="@dimen/channel_selector_bar_height"
-        android:background="@color/red"
-        android:scrollbars="none">
-        <LinearLayout
-            android:id="@+id/channelSelectors"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/channel_item_height"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/channel_selector_bar_horizontal_padding"
-            android:paddingRight="@dimen/channel_selector_bar_horizontal_padding" />
-    </HorizontalScrollView>
+        android:background="@color/red">
+        <FrameLayout
+            android:id="@+id/channel_manager_button"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/channel_selector_bar_height"
+            android:layout_alignParentRight="true">
+            <ImageView
+                android:id="@+id/channel_glide"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/channel_selector_bar_height"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/channel_glide"/>
+            <ImageView
+                android:id="@+id/channel_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/channel_selector_bar_height"
+                android:padding="10dp"
+                android:layout_alignParentRight="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/channel_glide_ok"
+                android:visibility="gone"/>
+        </FrameLayout>
+        <HorizontalScrollView
+            android:id="@+id/channelSelectorBar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/channel_selector_bar_height"
+            android:paddingTop="2dp"
+            android:layout_toLeftOf="@id/channel_manager_button"
+            android:scrollbars="none">
+            <LinearLayout
+                android:id="@+id/channelSelectors"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/channel_item_height"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/channel_selector_bar_horizontal_padding"
+                android:paddingRight="@dimen/channel_selector_bar_horizontal_padding" />
+        </HorizontalScrollView>
+    </RelativeLayout>
     <android.support.v4.view.ViewPager
         android:id="@+id/digestViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/channelSelectorBar">
+        android:layout_below="@+id/multi_channel_category_head">
     </android.support.v4.view.ViewPager>
+    <LinearLayout
+        android:id="@+id/channel_manager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/multi_channel_category_head"
+        android:orientation="vertical"
+        android:background="@color/lightGray">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="全部频道"
+            android:textSize="15dp"
+            android:textColor="@color/black"
+            android:paddingTop="20dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"/>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray"/>
+        <GridView
+            android:id="@+id/channels_grid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:horizontalSpacing="10dp"
+            android:verticalSpacing="10dp"
+            android:paddingTop="20dp"
+            android:paddingLeft="20dp"
+            android:numColumns="3"
+            android:gravity="center"/>
+    </LinearLayout>
 </RelativeLayout>

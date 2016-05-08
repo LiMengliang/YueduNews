@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import com.redoc.yuedu.view.MainActivity;
+import com.redoc.yuedu.view.utilities.AnimationUtilities;
 
 /**
  * Splash screen activity.
@@ -45,18 +46,7 @@ public class SplashActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
-        startSplashAnim();
+        AnimationUtilities.startAlphaAnim(mStartButton, 0, 1, 1000);
+        AnimationUtilities.startAlphaAnim(mSplashIcon, 0, 1, 1000);
     }
-
-    /**
-     * Start splash animation when activity is created
-     */
-    private void startSplashAnim()
-    {
-        Animation fadeInAnim = AnimationUtils.loadAnimation(this, R.anim.anim_fadein);
-        fadeInAnim.setFillAfter(true);
-        mStartButton.startAnimation(fadeInAnim);
-        mSplashIcon.startAnimation(fadeInAnim);
-    }
-
 }

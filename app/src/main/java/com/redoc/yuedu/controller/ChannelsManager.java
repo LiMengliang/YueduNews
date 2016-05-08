@@ -6,6 +6,7 @@ import com.redoc.yuedu.bean.Channel;
 import com.redoc.yuedu.view.ChannelFragment;
 import com.redoc.yuedu.view.DigestsChannelFragment;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,11 +27,25 @@ public abstract class ChannelsManager {
         }
     }
 
-    public abstract List<? extends Channel> getUserSelectedChannels();
+    protected abstract List<? extends Channel> getAllChannels();
+    protected abstract DigestsAdapter getSupportDigestsAdapter(Channel channel);
+    protected abstract List<? extends Channel> getUserSelectedChannels();
+
+    public List<? extends Channel> getSortedUserSelectedChannels() {
+        List<? extends Channel> userSelectedChannels = getUserSelectedChannels();
+        Collections.sort(userSelectedChannels);
+        return userSelectedChannels;
+    }
+
+    public List<? extends Channel> getSortedAllChannels() {
+        List<? extends Channel> allChannels = getAllChannels();
+        Collections.sort(allChannels);
+        return allChannels;
+    }
 
     public abstract void addUserSelectedChannel(Channel channel);
 
-    public abstract Channel getUserSelectedChannelByPosition(int position);
+    public abstract void removeUserSelectedChannel(Channel channel);
 
-    protected abstract DigestsAdapter getSupportDigestsAdapter(Channel channel);
+    public abstract Channel getUserSelectedChannelByPosition(int position);
 }
