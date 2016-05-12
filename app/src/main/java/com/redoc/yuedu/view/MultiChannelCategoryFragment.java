@@ -170,10 +170,6 @@ public class MultiChannelCategoryFragment extends Fragment {
         updateChannelSelectorBar(getCurrentSelectedChannel());
     }
 
-    private void initializeChannelsManagerView() {
-
-    }
-
     // TODO: TextView should be modualized
     private void updateChannelSelectorBar(Channel selectedChannel) {
         int position = selectedChannel == null ? 0 : channelManager.getSortedUserSelectedChannels().indexOf(selectedChannel);
@@ -225,12 +221,14 @@ public class MultiChannelCategoryFragment extends Fragment {
             if(lastPositionOffset < positionOffset && positionOffset > 0.999) {
                 channelFragment.updateChannelSelectorBar(position + 1);
                 currentSelectedChannel = channelManager.getUserSelectedChannelByPosition(position + 1);
+                updateChannelSelectorBar(getCurrentSelectedChannel());
                 lastPositionOffset = -1;
                 return;
             }
             else if(lastPositionOffset > positionOffset && positionOffset < 0.001) {
                 channelFragment.updateChannelSelectorBar(position);
                 currentSelectedChannel = channelManager.getUserSelectedChannelByPosition(position);
+                updateChannelSelectorBar(getCurrentSelectedChannel());
                 lastPositionOffset = -1;
                 return;
             }

@@ -1,7 +1,6 @@
 package com.redoc.yuedu.view;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.redoc.yuedu.R;
+import com.redoc.yuedu.bean.Digest;
 import com.redoc.yuedu.controller.DigestsAdapter;
 
 public class DigestsChannelFragment extends ChannelFragment {
@@ -47,10 +47,6 @@ public class DigestsChannelFragment extends ChannelFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_digest_channel, container, false);
-        // if(mDigestsList != null) {
-        //     return rootView;
-        // }
-        // View digestListFootView = inflater.inflate(R.layout.view_digest_list_foot, container, false);
         mDigestsList = (ListView)rootView.findViewById(R.id.digestsList);
         TextView textView = new TextView(getContext());
         textView.setText(R.string.fetch_news_ing);
@@ -85,23 +81,15 @@ public class DigestsChannelFragment extends ChannelFragment {
                 if (view.getLastVisiblePosition() == view.getCount() - 1) {
                     digestsAdapter.fetchMore();
                 }
-                //     ((NewsDigestsAdapter)newsDigestsAdapter).setIsDigestListViewScrolling(false);
-                //     int firstVisiblePosition = mDigestsList.getFirstVisiblePosition();
-                //     int lastVisiblePosition = mDigestsList.getLastVisiblePosition();
-                //     // TODO: need a digest view provider to be able to load image occording to different digest model type
-                //     // Test comments for oom
-                //     for(int i = 0; i < lastVisiblePosition - firstVisiblePosition; i++ ) {
-                //         View digestRootView = mDigestsList.getChildAt(i);
-                //              INewsDigestView digestView = ((NewsDigestsAdapter) newsDigestsAdapter).getExistingDigestViewWithoutImages(digestRootView);
-                //         if(digestView != null) {
-                //             digestView.loadDigestImages();
-                //             ((NewsDigestsAdapter) newsDigestsAdapter).removeDigestViewWithImages(mDigestsList.getChildAt(i));
-                //         }
-                //     }
-                // }
-                // else {
-                //     ((NewsDigestsAdapter)newsDigestsAdapter).setIsDigestListViewScrolling(true);
-                // }
+                int firstVisiblePosition = mDigestsList.getFirstVisiblePosition();
+                int lastVisiblePosition = mDigestsList.getLastVisiblePosition();
+                for(int i = 0; i <= lastVisiblePosition - firstVisiblePosition; i++ ) {
+                    View digestRootView = mDigestsList.getChildAt(i);
+                    DelayLoadImageControl delayLoadImageControl = (DelayLoadImageControl)digestRootView.getTag();
+                    if(delayLoadImageControl != null) {
+                        delayLoadImageControl.loadImages((Digest) digestsAdapter.getItem(i + firstVisiblePosition));
+                    }
+                }
             }
         }
 

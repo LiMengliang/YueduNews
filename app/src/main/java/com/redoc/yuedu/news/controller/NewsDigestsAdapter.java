@@ -30,6 +30,11 @@ public class NewsDigestsAdapter extends DigestsAdapter {
     private int index = 0;
     private DigestsProvider digestsProvider;
     private List<NewsDigest> newsDigests;
+    // record number of digest images loadded while fetchLatest, in fetchLatest() will set this value to 0,
+    // which means each time call a fetchLatest(), adapter will load 10 images automatically, regardless if
+    // list is scrolling.
+    private int countLoadLatestDigestImages = 0;
+    private final int maxLoadLatestDigestIamges = 10;
 
     public NewsDigestsAdapter(Context context, NewsChannel channel) {
         this.context = context;
@@ -41,8 +46,10 @@ public class NewsDigestsAdapter extends DigestsAdapter {
     @Override
     public void fetchLatest() {
         // TODO: only use web provider when network is available
+        newsDigests.clear();
         digestsProvider.fetchLatest(channel, context, this);
         index += 20;
+        countLoadLatestDigestImages = 0;
     }
 
     @Override
@@ -59,7 +66,7 @@ public class NewsDigestsAdapter extends DigestsAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return newsDigests.get(position);
     }
 
     @Override
@@ -75,7 +82,17 @@ public class NewsDigestsAdapter extends DigestsAdapter {
             convertView.setTag(newsDigestView);
         }
         ((NewsDigestView)convertView.getTag()).updateView(newsDigests.get(position));
-        ((NewsDigestView)convertView.getTag()).LoadImages(newsDigests.get(position));
+        if(maxLoadLatestDigestIamges > countLoadLatestDigestImages) {
+            countLoadLatestDigestImages++;
+            ((NewsDigestView)convertView.getTag()).loadImages(newsDigests.get(position));
+        }
+        else {
+            ((NewsDigestView)convertView.getTag()).clearImages();
+        }
+        // If position == Count - 10, we need to cache more news
+        if(position == getCount() - 10) {
+            fetchMore();
+        }
         return convertView;
     }
 
@@ -109,7 +126,9 @@ public class NewsDigestsAdapter extends DigestsAdapter {
             // TODO: Update NewsDigestAdapter here
             try {
                 List<NewsDigest> newsDigests = NewsDigestsJsonParser.instance.parseJsonToNewsDigestModels(jsonObject, channel);
-                updateNewsDigestsToEnd(newsDigests);
+                if(newsDigests.size() > 0) {
+                    updateNewsDigestsToEnd(newsDigests);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }

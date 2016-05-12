@@ -104,7 +104,29 @@ public class NewsDigestView implements DelayLoadImageControl {
     }
 
     @Override
-    public void LoadImages(Digest digest) {
+    public void clearImages() {
+            switch (newsDigestViewType) {
+                case SingleImage:{
+                    singleImageDigestImage.setImageResource(R.color.lightGray);
+                    break;
+                }
+                case MultiImages: {
+                    multiImageDigestImageA.setImageResource(R.color.lightGray);
+                    multiImageDigestImageB.setImageResource(R.color.lightGray);
+                    multiImageDigestImageC.setImageResource(R.color.lightGray);
+                    break;
+                }
+                case PhotSetDigest: {
+                    photoSetDigestMainImage.setImageResource(R.color.lightGray);
+                    photoSetDigestImageA.setImageResource(R.color.lightGray);
+                    photoSetDigestImageB.setImageResource(R.color.lightGray);
+                    break;
+                }
+            }
+    }
+
+    @Override
+    public void loadImages(Digest digest) {
         if(digest.getClass() == NewsDigest.class) {
             NewsDigest newsDigest = (NewsDigest)digest;
             switch (newsDigestViewType) {
