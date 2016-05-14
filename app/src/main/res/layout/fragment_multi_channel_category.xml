@@ -7,7 +7,7 @@
         android:id="@+id/multi_channel_category_head"
         android:layout_width="match_parent"
         android:layout_height="@dimen/channel_selector_bar_height"
-        android:background="@color/red">
+        android:background="@color/mainColor">
         <FrameLayout
             android:id="@+id/channel_manager_button"
             android:layout_width="wrap_content"

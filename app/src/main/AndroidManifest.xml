@@ -2,17 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.redoc.yuedu">
 
+    <!-- permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
-        android:name="com.redoc.yuedu.YueduApplication"
+        android:name=".YueduApplication"
         android:allowBackup="true"
         android:icon="@mipmap/yuedu"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.Base">
         <activity
             android:name=".SplashActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -23,10 +27,12 @@
         <activity
             android:name=".view.MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/FullscreenTheme" />
+            android:theme="@style/AppTheme.Fullscreen" />
+
+        <!--OfflineCache Activity-->
+        <activity android:name=".setting.view.OfflineCacheActivity"
+            android:label="@string/offline_label"
+            android:theme="@style/AppTheme.Base"/>
     </application>
 
-    <!--permissions-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 </manifest>

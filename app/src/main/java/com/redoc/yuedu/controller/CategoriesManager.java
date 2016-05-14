@@ -7,7 +7,10 @@ import com.redoc.yuedu.R;
 import com.redoc.yuedu.bean.Category;
 import com.redoc.yuedu.bean.MultiChannelCategory;
 import com.redoc.yuedu.bean.SingleChannelCategory;
+import com.redoc.yuedu.news.bean.NewsCategory;
 import com.redoc.yuedu.news.controller.NewsChannelsManager;
+import com.redoc.yuedu.setting.bean.UserSettingCategory;
+import com.redoc.yuedu.setting.view.UserSettingCategoryFragment;
 import com.redoc.yuedu.view.MultiChannelCategoryFragment;
 import com.redoc.yuedu.view.SingleChannelCategoryFragment;
 
@@ -20,14 +23,16 @@ import java.util.Map;
  */
 public class CategoriesManager {
     private Context context;
-    private MultiChannelCategory news = new MultiChannelCategory("首页", R.drawable.category_main);
+    private NewsCategory news = new NewsCategory("首页", R.drawable.category_main);
     private SingleChannelCategory audio = new SingleChannelCategory("音频", R.drawable.category_audio);
+    private UserSettingCategory setting = new UserSettingCategory("设置", R.drawable.category_setting);
 
     private Map<Category, Fragment> categoriesAndFragments = new HashMap<Category, Fragment>();
     private ArrayList<Category> categories = new ArrayList<Category>() {
         {
             add(news);
             add(audio);
+            add(setting);
         }
     };
     public ArrayList<Category> getCategories() {
@@ -52,6 +57,10 @@ public class CategoriesManager {
                 }
                 case "音频": {
                     fragment = new SingleChannelCategoryFragment();
+                    break;
+                }
+                case "设置": {
+                    fragment = UserSettingCategoryFragment.newInstance();
                     break;
                 }
                 default: {

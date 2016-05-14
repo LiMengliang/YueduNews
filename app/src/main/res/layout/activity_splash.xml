@@ -29,6 +29,7 @@
         android:layout_gravity="bottom|center_horizontal"
         android:text="@string/start"
         android:textStyle="normal"
+        android:textColor="@color/white"
         android:textSize="15dp"
         android:background="#80a8a5a5"/>
 

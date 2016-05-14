@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -158,12 +159,12 @@ public class MultiChannelCategoryFragment extends Fragment {
         params.gravity = Gravity.CENTER_VERTICAL;
         // TODO:Maybe channel selector can also bind to an adapter
         int index = 0;
-        for(Channel channel : channelManager.getSortedUserSelectedChannels()) {
+        for(final Channel channel : channelManager.getSortedUserSelectedChannels()) {
             // Add channel name to selector
             TextView textView = new TextView(mActivity);
             textView.setText(channel.getChannelName());
             textView.setTextSize(15);
-            textView.setOnClickListener(new ChannelNameOnClickListener());
+            textView.setOnClickListener(new ChannelNameClickListener(channel, index));
             mChannelSelectors.addView(textView, index++, params);
         }
         // set selected channel, in this method, we'll also update news digests.s
@@ -191,7 +192,7 @@ public class MultiChannelCategoryFragment extends Fragment {
         // Check corresponding channel.
         for (int j = 0; j < mChannelSelectors.getChildCount(); j++) {
             TextView checkView = (TextView) mChannelSelectors.getChildAt(j);
-            checkView.setTextColor(0xffffffff);
+            checkView.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
             if (j == selectedChannelPosition) {
                 checkView.setAlpha(1.0f);
             } else {
@@ -200,10 +201,20 @@ public class MultiChannelCategoryFragment extends Fragment {
         }
     }
 
-    class ChannelNameOnClickListener implements View.OnClickListener {
-         @Override
-         public void onClick(View v) {
-         }
+    class ChannelNameClickListener implements View.OnClickListener {
+
+        private Channel channel;
+        private int index;
+
+        public ChannelNameClickListener(Channel channel, int index) {
+            this.channel = channel;
+            this.index = index;
+        }
+        @Override
+        public void onClick(View v) {
+            updateChannelSelectorBar(channel);
+            mChannelsViewPager.setCurrentItem(index, false);
+        }
     }
 
     class ChannelViewPagerChangedListener implements ViewPager.OnPageChangeListener {

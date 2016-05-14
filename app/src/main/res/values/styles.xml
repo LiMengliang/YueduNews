@@ -1,46 +1,41 @@
 <resources>
-
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="AppTheme.Base" parent="Theme.AppCompat">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+
+        <!-- Actionbar color -->
+        <item name="colorPrimary">@color/mainColor</item>
+        <!--Status bar color-->
+        <item name="colorPrimaryDark">@color/accent_material_light</item>
+        <!--Window color-->
+        <item name="android:windowBackground">@color/white</item>
     </style>
 
-    <style name="FullscreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <!--Full screen theme-->
+    <style name="AppTheme.Fullscreen" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowFullscreen">true</item>
-        <!--<item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
-        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>-->
+        <item name="windowActionBar">false</item>
     </style>
 
     <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/black_overlay</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="digestImage">
-        <item name ="android:layout_width">105dp</item>
-        <item name ="android:layout_height">72dp</item>
-        <item name ="android:layout_weight">1</item>
-        <item name ="android:scaleType">centerCrop</item>
+    <style name="digest_image_style">
+        <item name="android:layout_width">105dp</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:scaleType">centerCrop</item>
         <item name="android:background">@color/lightGray</item>
     </style>
 
     <style name="digest_main_image">
         <item name="android:layout_width">225dp</item>
         <item name="android:layout_height">154dp</item>
-        <item name ="android:scaleType">centerCrop</item>
+        <item name="android:scaleType">centerCrop</item>
         <item name="android:background">@color/lightGray</item>
     </style>
 

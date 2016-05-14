@@ -15,4 +15,14 @@
     <string name="fetch_news_digest_failed">"获取新闻失败..."</string>
     <string name="fetch_news_ing">"正在获取新闻..."</string>
     <string name="yuedu">"悦读"</string>
+
+    <!--Setting Fragment-->
+    <string name="favorite">收藏</string>
+    <string name="night_mode">夜间</string>
+    <string name="offline">离线</string>
+    <string name="setting">设置</string>
+    <string name="title_activity_offline_download">OfflineDownloadActivity</string>
+
+    <!--Offline Cache Activity-->
+    <string name="offline_label">离线缓存</string>
 </resources>
