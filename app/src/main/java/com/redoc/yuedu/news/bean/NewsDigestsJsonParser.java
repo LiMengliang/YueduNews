@@ -55,4 +55,15 @@ public class NewsDigestsJsonParser {
         }
         return newsDigests;
     }
+
+    public List<NewsDigest> parseJsonToNewsDigestModels(JSONArray jsonArray,
+                                                        NewsChannel channel) throws JSONException {
+        List<NewsDigest> digests = new ArrayList<NewsDigest>();
+        int length = jsonArray.length();
+        for(int i = 0; i < length; i++) {
+            JSONObject jsonObject = (JSONObject)jsonArray.get(i);
+            digests.addAll(parseJsonToNewsDigestModels(jsonObject, channel));
+        }
+        return digests;
+    }
 }

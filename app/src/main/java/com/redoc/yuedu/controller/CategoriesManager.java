@@ -1,11 +1,13 @@
 package com.redoc.yuedu.controller;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 
 import com.redoc.yuedu.R;
+import com.redoc.yuedu.bean.CacheableCategory;
 import com.redoc.yuedu.bean.Category;
-import com.redoc.yuedu.bean.MultiChannelCategory;
+import com.redoc.yuedu.bean.Channel;
 import com.redoc.yuedu.bean.SingleChannelCategory;
 import com.redoc.yuedu.news.bean.NewsCategory;
 import com.redoc.yuedu.news.controller.NewsChannelsManager;
@@ -16,6 +18,7 @@ import com.redoc.yuedu.view.SingleChannelCategoryFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,6 +40,16 @@ public class CategoriesManager {
     };
     public ArrayList<Category> getCategories() {
         return categories;
+    }
+
+    public ArrayList<Parcelable> getChacheableChannels() {
+        ArrayList<Parcelable> cacheableChannels = new ArrayList<Parcelable>();
+        for(Category category : categories) {
+            if(CacheableCategory.class.isAssignableFrom(category.getClass())) {
+                cacheableChannels.addAll(((CacheableCategory) category).getChannelCacheInfo());
+            }
+        }
+        return cacheableChannels;
     }
 
     public CategoriesManager(Context context) {

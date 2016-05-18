@@ -25,4 +25,9 @@
 
     <!--Offline Cache Activity-->
     <string name="offline_label">离线缓存</string>
+    <string name="cache_button_text_on">停止</string>
+    <string name="cache_button_text_off">启动</string>
+    <string name="cache_setting">缓存设置</string>
+    <string name="cache_images">缓存图片</string>
+    <string name="all_channels">全部频道</string>
 </resources>

@@ -9,11 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.redoc.yuedu.R;
+import com.redoc.yuedu.view.MainActivity;
 
 /**
  * Created by limen on 2016/5/12.
  */
 public class UserSettingCategoryFragment extends Fragment {
+
+    public static String CacheableChannelKey = "CacheableChannelsKey";
 
     private View settingView;
     private View offlineView;
@@ -35,12 +38,15 @@ public class UserSettingCategoryFragment extends Fragment {
     }
 
     class OfflineViewClickListener implements View.OnClickListener {
-
         @Override
         public void onClick(View v) {
             Intent intent = new Intent();
             ComponentName comp = new ComponentName(getActivity(), OfflineCacheActivity.class);
             intent.setComponent(comp);
+            Bundle arguments = new Bundle();
+            MainActivity activity = (MainActivity)getActivity();
+            arguments.putParcelableArrayList(CacheableChannelKey, activity.getCategoriesManager().getChacheableChannels());
+            intent.putExtras(arguments);
             startActivity(intent);
         }
     }

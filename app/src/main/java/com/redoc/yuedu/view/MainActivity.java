@@ -35,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
     // public static RequestQueue VolleyRequestQueue;
     // public static BitmapCache BitmapCache;
 
+    public CategoriesManager getCategoriesManager() {
+        return categoriesManager;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

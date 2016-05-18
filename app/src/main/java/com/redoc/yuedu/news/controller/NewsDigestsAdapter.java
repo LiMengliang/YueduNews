@@ -6,6 +6,9 @@ import android.view.ViewGroup;
 
 import com.android.volley.Response;
 import com.redoc.yuedu.bean.Channel;
+import com.redoc.yuedu.controller.CacheDigestProvider;
+import com.redoc.yuedu.controller.DigestCacheLatestResponseListener;
+import com.redoc.yuedu.controller.DigestCacheMoreResponseListener;
 import com.redoc.yuedu.controller.DigestsAdapter;
 import com.redoc.yuedu.controller.DigestsProvider;
 import com.redoc.yuedu.controller.WebDigestsProvider;
@@ -14,6 +17,7 @@ import com.redoc.yuedu.news.bean.NewsChannel;
 import com.redoc.yuedu.news.bean.NewsDigest;
 import com.redoc.yuedu.news.bean.NewsDigestsJsonParser;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,7 +43,9 @@ public class NewsDigestsAdapter extends DigestsAdapter {
     public NewsDigestsAdapter(Context context, NewsChannel channel) {
         this.context = context;
         this.channel = channel;
-        digestsProvider = new WebDigestsProvider(new NewsDigestLatestResponseListener(), new NewsDigestMoreResponseListener());
+        // TODO: Combine web and cache provider here
+        digestsProvider = // new WebDigestsProvider(new NewsDigestLatestResponseListener(), new NewsDigestMoreResponseListener());
+                new CacheDigestProvider(new NewsDigestCacheLatestResponseListener(), new NewsDigsetCacheMoreResponseListener());
         newsDigests = new ArrayList<NewsDigest>();
     }
 
@@ -124,6 +130,34 @@ public class NewsDigestsAdapter extends DigestsAdapter {
         @Override
         public void onResponse(JSONObject jsonObject) {
             // TODO: Update NewsDigestAdapter here
+            try {
+                List<NewsDigest> newsDigests = NewsDigestsJsonParser.instance.parseJsonToNewsDigestModels(jsonObject, channel);
+                if(newsDigests.size() > 0) {
+                    updateNewsDigestsToEnd(newsDigests);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    class NewsDigestCacheLatestResponseListener implements DigestCacheLatestResponseListener {
+
+        @Override
+        public void onResponse(JSONArray digestJSONArray) {
+            try {
+                List<NewsDigest> newsDigests = NewsDigestsJsonParser.instance.parseJsonToNewsDigestModels(digestJSONArray, channel);
+                updateNewsDigstsToStart(newsDigests);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    class NewsDigsetCacheMoreResponseListener implements DigestCacheMoreResponseListener {
+
+        @Override
+        public void onResponse(JSONObject jsonObject) {
             try {
                 List<NewsDigest> newsDigests = NewsDigestsJsonParser.instance.parseJsonToNewsDigestModels(jsonObject, channel);
                 if(newsDigests.size() > 0) {
