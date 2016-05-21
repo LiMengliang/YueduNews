@@ -22,10 +22,13 @@ import java.io.File;
  * Created by limen on 2016/4/30.
  */
 public class YueduApplication extends Application {
+    public static Context Context;
+
     @Override
     public void onCreate() {
         super.onCreate();
-        VolleyUtilities.initialize(getApplicationContext());
+        Context = getApplicationContext();
+        VolleyUtilities.initialize(Context);
         initImageLoader(getApplicationContext());
     }
 

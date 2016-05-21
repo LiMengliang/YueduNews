@@ -33,57 +33,70 @@
                 android:textSize="@dimen/large_size_text"
                 android:textColor="@color/white"/>
         </LinearLayout>
-        <ToggleButton
-            android:id="@+id/startStopCache"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@color/transparent"
-            android:textOn="@string/cache_button_text_on"
-            android:textOff="@string/cache_button_text_off"/>
 
         <TextView
-            android:id="@+id/cachedCount"
+            android:id="@+id/cacheProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
-            android:textSize="@dimen/media_size_text"
-            android:text="0"></TextView>
-        <RelativeLayout
+            android:textSize="@dimen/media_size_text"/>
+        <ToggleButton
+            android:id="@+id/startStopCache"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_margin"
+            android:layout_height="30dp"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true">
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginRight="40dp"
+            android:background="@drawable/round_button_background"
+            android:textSize="@dimen/media_size_text"
+            android:textOn="@string/cache_button_text_on"
+            android:textOff="@string/cache_button_text_off"/>
+        <ToggleButton
+            android:id="@+id/select_all"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="40dp"
+            android:background="@drawable/round_button_background"
+            android:textSize="@dimen/media_size_text"
+            android:textColor="@color/white_text_color"
+            android:textOn="@string/select_all_text_on"
+            android:textOff="@string/select_all_text_off"/>
+        <RelativeLayout
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/cache_icon">
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/cache_progress_line_two"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:textSize="@dimen/media_size_text"
-                android:text="@string/cache_images"
+                android:layout_centerInParent="true"
+                android:textSize="24dp"
+                android:textStyle="bold"
                 android:textColor="@color/white"/>
-            <CheckBox
-                android:id="@+id/checkBox"
+            <TextView
+                android:id="@+id/cache_progress_line_one"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/textView"
-                android:checked="false" />
+                android:layout_centerHorizontal="true"
+                android:layout_above="@id/cache_progress_line_two"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:textSize="@dimen/media_size_text"/>
+            <TextView
+                android:id="@+id/cache_progress_line_three"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/cache_progress_line_two"
+                android:textSize="@dimen/media_size_text"/>
+
         </RelativeLayout>
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:id="@+id/progressBar"
-            android:layout_centerHorizontal="true"
-            android:visibility="gone"/>
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/cache"
-            android:layout_centerInParent="true"/>
     </RelativeLayout>
     <ListView
         android:id="@+id/all_channels"

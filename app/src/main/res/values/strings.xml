@@ -22,12 +22,22 @@
     <string name="offline">离线</string>
     <string name="setting">设置</string>
     <string name="title_activity_offline_download">OfflineDownloadActivity</string>
+    <string name="downloading">正在下载 </string>
 
     <!--Offline Cache Activity-->
     <string name="offline_label">离线缓存</string>
-    <string name="cache_button_text_on">停止</string>
-    <string name="cache_button_text_off">启动</string>
+    <string name="cache_button_text_on">停止缓存</string>
+    <string name="cache_button_text_off">启动缓存</string>
     <string name="cache_setting">缓存设置</string>
     <string name="cache_images">缓存图片</string>
     <string name="all_channels">全部频道</string>
+    <string name="cache_type_digest">摘要</string>
+    <string name="cache_type_detail">正文</string>
+    <string name="cache_type_image">图片</string>
+    <string name="cache_progress">正在下载%s频道</string>
+    <string name="cache_progress_finished">下载结束</string>
+    <string name="cache_status_downloading">正在下载</string>
+    <string name="cache_status_paused">暂停下载</string>
+    <string name="select_all_text_on">取消全选</string>
+    <string name="select_all_text_off">全部选择</string>
 </resources>

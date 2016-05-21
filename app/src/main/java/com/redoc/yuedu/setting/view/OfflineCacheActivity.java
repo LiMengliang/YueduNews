@@ -2,23 +2,23 @@ package com.redoc.yuedu.setting.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.redoc.yuedu.R;
+import com.redoc.yuedu.YueduApplication;
+import com.redoc.yuedu.bean.CacheProgressStatus;
 import com.redoc.yuedu.bean.Channel;
+import com.redoc.yuedu.controller.CacheStatus;
 import com.redoc.yuedu.controller.ChannelCache;
 
 import java.util.ArrayList;
@@ -29,15 +29,13 @@ public class OfflineCacheActivity extends Activity {
     private ArrayList<Channel> allCacheableChannels;
     private List<Channel> checkedChannel = new ArrayList<Channel>();
     private ListView allChannelsList;
-    private TextView cachedCounts;
     private ToggleButton startStopCache;
-    private ProgressBar progressBar;
+    private ToggleButton selectAll;
     private ImageButton backButton;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+    private TextView firstLine;
+    private TextView secondLine;
+    private TextView thirdLine;
+    private AllCacheChannelAdapter allCacheChannelAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,25 +43,40 @@ public class OfflineCacheActivity extends Activity {
         setContentView(R.layout.activity_offline_cache);
         allChannelsList = (ListView) findViewById(R.id.all_channels);
         startStopCache = (ToggleButton) findViewById(R.id.startStopCache);
-        cachedCounts = (TextView) findViewById(R.id.cachedCount);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        selectAll = (ToggleButton) findViewById(R.id.select_all);
         backButton = (ImageButton) findViewById(R.id.back);
+        firstLine = (TextView) findViewById(R.id.cache_progress_line_one);
+        secondLine = (TextView) findViewById(R.id.cache_progress_line_two);
+        thirdLine = (TextView) findViewById(R.id.cache_progress_line_three);
 
         startStopCache.setOnClickListener(new StartStopCacheClickedListener(checkedChannel, this));
         allCacheableChannels = getIntent().getParcelableArrayListExtra(UserSettingCategoryFragment.CacheableChannelKey);
-        allChannelsList.setAdapter(new AllCacheChannelAdapter(this, allCacheableChannels));
+        allCacheChannelAdapter = new AllCacheChannelAdapter(this, allCacheableChannels);
+        allChannelsList.setAdapter(allCacheChannelAdapter);
         allChannelsList.setOnItemClickListener(new ChannelListItemClickedListener());
         backButton.setOnClickListener(new BackClickedListener());
-    }
+        selectAll.setOnClickListener(new SelectAllClickedListener());
 
-    // TODO: use handler
-    public void onCacheFinished() {
-        startStopCache.setChecked(false);
-    }
-
-    public void onCachedOneChannel(String value) {
-        cachedCounts.setText(value);
-        progressBar.setProgress(Integer.parseInt(value));
+        ChannelCache.getInstance().AddHandler(new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                if(msg.what == ChannelCache.ProgressMessage) {
+                    Bundle bundle = msg.getData();
+                    CacheProgressStatus cacheProgressStatus = bundle.getParcelable(ChannelCache.ProgressMessageKey);
+                    if(cacheProgressStatus.getFinished()) {
+                        firstLine.setText("");
+                        secondLine.setText(YueduApplication.Context.getString(R.string.cache_progress_finished));
+                        thirdLine.setText("");
+                        startStopCache.setChecked(false);
+                        selectAll.setEnabled(true);
+                    }
+                    else {
+                        secondLine.setText(cacheProgressStatus.getChannelName());
+                        thirdLine.setText(cacheProgressStatus.getCacheType());
+                    }
+                }
+            }
+        });
     }
 
     class AllCacheChannelAdapter extends BaseAdapter {
@@ -74,6 +87,26 @@ public class OfflineCacheActivity extends Activity {
         public AllCacheChannelAdapter(Context context, List<Channel> allChannels) {
             this.context = context;
             this.allChannels = allChannels;
+        }
+
+        public void addCacheChannel(Channel channel) {
+            checkedChannel.add(channel);
+            notifyDataSetChanged();
+        }
+
+        public void removeCacheChannel(Channel channel) {
+            checkedChannel.remove(channel);
+            notifyDataSetChanged();
+        }
+
+        public void addAllChannel(List<Channel> channels) {
+            checkedChannel.addAll(channels);
+            notifyDataSetChanged();
+        }
+
+        public void removeAllCachedChannels() {
+            checkedChannel.clear();
+            notifyDataSetChanged();
         }
 
         @Override
@@ -109,7 +142,6 @@ public class OfflineCacheActivity extends Activity {
     }
 
     class BackClickedListener implements View.OnClickListener {
-
         @Override
         public void onClick(View v) {
             finish();
@@ -119,14 +151,11 @@ public class OfflineCacheActivity extends Activity {
     class ChannelListItemClickedListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            CacheChannelView cacheChannelView = (CacheChannelView) view.getTag();
             Channel channel = allCacheableChannels.get(position);
             if (checkedChannel.contains(channel)) {
-                checkedChannel.remove(channel);
-                cacheChannelView.setChecked(false);
+                allCacheChannelAdapter.removeCacheChannel(channel);
             } else {
-                checkedChannel.add(channel);
-                cacheChannelView.setChecked(true);
+                allCacheChannelAdapter.addCacheChannel(channel);
             }
         }
     }
@@ -143,10 +172,32 @@ public class OfflineCacheActivity extends Activity {
 
         @Override
         public void onClick(View v) {
-            ToggleButton toggleButton = (ToggleButton) v;
-            if (toggleButton.isChecked()) {
-                ChannelCache.getInstance().CacheTopDigests(channelsToCache, context);
-                progressBar.setMax(channelsToCache.size());
+            if (ChannelCache.getInstance().getStatus() == CacheStatus.NotStarted) {
+                ChannelCache.getInstance().startCache(channelsToCache, context);
+                firstLine.setText(YueduApplication.Context.getString(R.string.cache_status_downloading));
+                selectAll.setEnabled(false);
+            }
+            else if(ChannelCache.getInstance().getStatus() == CacheStatus.InProgress) {
+                ChannelCache.getInstance().pause();
+                firstLine.setText(YueduApplication.Context.getString(R.string.cache_status_paused));
+            }
+            else if(ChannelCache.getInstance().getStatus() == CacheStatus.Paused) {
+                ChannelCache.getInstance().resume();
+                firstLine.setText(YueduApplication.Context.getString(R.string.cache_status_downloading));
+            }
+        }
+    }
+
+    class SelectAllClickedListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            if(selectAll.isChecked()) {
+                checkedChannel.clear();
+                allCacheChannelAdapter.addAllChannel(allCacheableChannels);
+            }
+            else{
+                allCacheChannelAdapter.removeAllCachedChannels();
             }
         }
     }

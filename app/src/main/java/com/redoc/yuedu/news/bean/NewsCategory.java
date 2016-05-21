@@ -20,7 +20,11 @@ public class NewsCategory extends MultiChannelCategory implements CacheableCateg
     @Override
     public ArrayList<Channel> getChannelCacheInfo() {
         ArrayList<Channel> channels = new ArrayList<Channel>();
-        channels.addAll(AllNewsChannels.getAllChannels());
+        for(Channel channel : AllNewsChannels.getAllChannels()) {
+            if(channel.getCacheable()) {
+                channels.add(channel);
+            }
+        }
         return channels;
     }
 }

@@ -25,7 +25,7 @@ public class CacheDigestProvider implements DigestsProvider {
 
     @Override
     public void fetchLatest(Channel channel, Context context, DigestsAdapter digestsAdapter) {
-        String cacheKey = ChannelCache.getInstance().getChannelCacheKey(channel, true);
+        String cacheKey = ChannelCache.getInstance().getChannelCacheKey(channel, 0, true);
         String jsonValue = ACacheUtilities.getCacheStr(context, cacheKey);
         // JSONTokener jsonParser = new JSONTokener(jsonValue);
         if(jsonValue != null) {

@@ -6,13 +6,15 @@
     <color name="black_overlay">#66000000</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="darkGray">#FF808080</color>
+    <color name="transparentWhite">#AAFFFFFF</color>
 
     <!--Digest activity's category selector bar-->
     <color name="lightGray">#F0F0F0</color>
     <color name="gray">#CCCCCC</color>
 
     <!--<color name="red">#CC0000</color>-->
-    <color name="mainColor">#00a497</color>
+    <!--<color name="mainColor">#00a497</color>-->
+    <color name="mainColor">#0aaf0d</color>
 
     <!--Digest activity's viewpager background-->
     <color name="white">#FFFFFFFF</color>

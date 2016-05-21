@@ -59,12 +59,18 @@ public class Channel implements Comparable, Parcelable {
         return weight;
     }
 
-    public Channel(String channelName, String channelId, String httpLinkFormat, int weight) {
+    private boolean cacheable;
+    public boolean getCacheable() {
+        return cacheable;
+    }
+
+    public Channel(String channelName, String channelId, String httpLinkFormat, int weight, boolean cacheable) {
         this.channelId = channelId;
         this.channelName = channelName;
         this.httpLinkFormat = httpLinkFormat;
         this.selected = false;
         this.weight = weight;
+        this.cacheable = cacheable;
     }
 
     @Override
