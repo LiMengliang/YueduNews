@@ -27,11 +27,10 @@ public class CacheDigestProvider implements DigestsProvider {
     public void fetchLatest(Channel channel, Context context, DigestsAdapter digestsAdapter) {
         String cacheKey = ChannelCache.getInstance().getChannelCacheKey(channel, 0, true);
         String jsonValue = ACacheUtilities.getCacheStr(context, cacheKey);
-        // JSONTokener jsonParser = new JSONTokener(jsonValue);
         if(jsonValue != null) {
             try {
-                JSONArray jsonArray = new JSONArray(jsonValue);
-                digestCacheLatestResponseListener.onResponse(jsonArray);
+                JSONObject jsonObject = new JSONObject(jsonValue);
+                digestCacheLatestResponseListener.onResponse(jsonObject);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -40,14 +39,14 @@ public class CacheDigestProvider implements DigestsProvider {
 
     @Override
     public void fetchMore(Channel channel, int index, Context context, DigestsAdapter digestsAdapter) {
-        // String cacheKey = ChannelCache.getInstance().getChannelCacheKey(channel, true);
-        // String jsonValue = ACacheUtilities.getCacheStr(context, cacheKey);
-        // JSONTokener jsonParser = new JSONTokener(jsonValue);
-        // try {
-        //     JSONObject jsonObject = (JSONObject)jsonParser.nextValue();
-        //     digestCacheMoreResponseListener.onResponse(jsonObject);
-        // } catch (JSONException e) {
-        //     e.printStackTrace();
-        // }
+        String cacheKey = ChannelCache.getInstance().getChannelCacheKey(channel, index, true);
+        String jsonValue = ACacheUtilities.getCacheStr(context, cacheKey);
+        JSONTokener jsonParser = new JSONTokener(jsonValue);
+        try {
+            JSONObject jsonObject = (JSONObject)jsonParser.nextValue();
+            digestCacheMoreResponseListener.onResponse(jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

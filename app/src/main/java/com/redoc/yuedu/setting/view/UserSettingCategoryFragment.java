@@ -9,11 +9,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.redoc.yuedu.R;
 import com.redoc.yuedu.YueduApplication;
 import com.redoc.yuedu.bean.CacheProgressStatus;
+import com.redoc.yuedu.controller.CacheStatus;
 import com.redoc.yuedu.controller.ChannelCache;
 import com.redoc.yuedu.view.MainActivity;
 
@@ -29,6 +33,7 @@ public class UserSettingCategoryFragment extends Fragment {
     private View offlineView;
     private View favoriteView;
     private TextView cacheProgress;
+    private ImageButton userIcon;
     public static UserSettingCategoryFragment newInstance() {
         UserSettingCategoryFragment fragment = new UserSettingCategoryFragment();
         return fragment;
@@ -41,8 +46,10 @@ public class UserSettingCategoryFragment extends Fragment {
         offlineView = rootView.findViewById(R.id.offline_view);
         favoriteView = rootView.findViewById(R.id.favorite_view);
         cacheProgress = (TextView)rootView.findViewById(R.id.progress);
+        userIcon = (ImageButton)rootView.findViewById(R.id.user_icon);
 
         offlineView.setOnClickListener(new OfflineViewClickListener());
+        userIcon.setOnClickListener(new UserIconClickListener());
 
         ChannelCache.getInstance().AddHandler(new Handler(){
             @Override
@@ -50,7 +57,7 @@ public class UserSettingCategoryFragment extends Fragment {
                 if(msg.what == ChannelCache.ProgressMessage) {
                     Bundle bundle = msg.getData();
                     CacheProgressStatus cacheProgressStatus = bundle.getParcelable(ChannelCache.ProgressMessageKey);
-                    if(cacheProgressStatus.getFinished()) {
+                    if(cacheProgressStatus.getCacheStatus() == CacheStatus.NotStarted) {
                         cacheProgress.setText(YueduApplication.Context.getString(R.string.cache_progress_finished));
                     }
                     else {
@@ -61,6 +68,11 @@ public class UserSettingCategoryFragment extends Fragment {
             }
         });
         return rootView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
     }
 
     class OfflineViewClickListener implements View.OnClickListener {
@@ -74,6 +86,13 @@ public class UserSettingCategoryFragment extends Fragment {
             arguments.putParcelableArrayList(CacheableChannelKey, activity.getCategoriesManager().getChacheableChannels());
             intent.putExtras(arguments);
             startActivity(intent);
+        }
+    }
+
+    class UserIconClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+             Toast.makeText(getActivity(), "tet", Toast.LENGTH_SHORT).show();
         }
     }
 }

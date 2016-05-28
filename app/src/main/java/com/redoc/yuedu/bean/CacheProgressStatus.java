@@ -5,6 +5,9 @@ import android.os.Parcelable;
 
 import com.redoc.yuedu.R;
 import com.redoc.yuedu.YueduApplication;
+import com.redoc.yuedu.controller.CacheStatus;
+import com.redoc.yuedu.controller.ChannelCache;
+import com.redoc.yuedu.utilities.preference.PreferenceUtilities;
 
 /**
  * Created by limen on 2016/5/21.
@@ -12,35 +15,46 @@ import com.redoc.yuedu.YueduApplication;
 public class CacheProgressStatus implements Parcelable {
 
     private String channelName;
-    private String cacheType;
+    private CacheType cacheType;
     private int totalCount;
     private int currentIndex;
-    private boolean finished;
+    private CacheStatus cacheStatus;
+    private long lastCacheTime;
 
-    public CacheProgressStatus(String channelName, CacheType cacheType, int totalCount, int currentIndex, boolean finished) {
+    public final static String CacheStatusPreference = "CacheStatusPreference";
+    public final static String LastCacheTimeKey = "LastCacheTimeKey";
+    public final static String CacheStatusKey = "CacheStatusKey";
+    public final static String CurrentCacheChannelKey = "CurrentCacheChannelKey";
+    public final static String CacheTypeKey = "CacheTypeKey";
+    public final static String CurrentCacheIndexKey = "CurrentCacheIndexKey";
+    public final static String TotalCacheCountKey = "TotalCacheCountKey";
+
+    public CacheProgressStatus(String channelName, CacheType cacheType, int totalCount, int currentIndex, CacheStatus cacheStatus, long lastCacheTime) {
         this.channelName = channelName;
         this.totalCount = totalCount;
         this.currentIndex = currentIndex;
-        this.finished = finished;
-        switch (cacheType) {
-            case Detail:
-                this.cacheType = YueduApplication.Context.getString(R.string.cache_type_detail);
-                break;
-            case Digest:
-                this.cacheType = YueduApplication.Context.getString(R.string.cache_type_digest);
-                break;
-            case Image:
-                this.cacheType = YueduApplication.Context.getString(R.string.cache_type_image);
-                break;
-        }
+        this.cacheStatus = cacheStatus;
+        this.cacheType = cacheType;
+        this.lastCacheTime = lastCacheTime;
+    }
+
+    public static CacheProgressStatus getFromPreferences() {
+        return new CacheProgressStatus(
+                PreferenceUtilities.getStringValue(CacheStatusPreference, CurrentCacheChannelKey),
+                CacheType.values()[PreferenceUtilities.getIntValue(CacheStatusPreference, CacheTypeKey)],
+                PreferenceUtilities.getIntValue(CacheStatusPreference, TotalCacheCountKey),
+                PreferenceUtilities.getIntValue(CacheStatusPreference, CurrentCacheIndexKey),
+                CacheStatus.values()[PreferenceUtilities.getIntValue(CacheStatusPreference, CacheStatusKey)],
+                PreferenceUtilities.getLongValue(CacheStatusPreference, LastCacheTimeKey));
     }
 
     protected CacheProgressStatus(Parcel in) {
         channelName = in.readString();
-        cacheType = in.readString();
+        cacheType = CacheType.values()[in.readInt()];
         totalCount = in.readInt();
         currentIndex =in.readInt();
-        finished = in.readByte() == 1;
+        cacheStatus = CacheStatus.values()[in.readInt()];
+        lastCacheTime = in.readLong();
     }
 
     public static final Creator<CacheProgressStatus> CREATOR = new Creator<CacheProgressStatus>() {
@@ -59,7 +73,7 @@ public class CacheProgressStatus implements Parcelable {
         return channelName;
     }
 
-    public String getCacheType() {
+    public CacheType getCacheType() {
         return cacheType;
     }
 
@@ -71,8 +85,12 @@ public class CacheProgressStatus implements Parcelable {
         return currentIndex;
     }
 
-    public boolean getFinished() {
-        return finished;
+    public CacheStatus getCacheStatus() {
+        return cacheStatus;
+    }
+
+    public long getLastCacheTime() {
+        return lastCacheTime;
     }
 
     @Override
@@ -83,9 +101,19 @@ public class CacheProgressStatus implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(channelName);
-        dest.writeString(cacheType);
+        dest.writeInt(cacheType.ordinal());
         dest.writeInt(totalCount);
         dest.writeInt(currentIndex);
-        dest.writeByte((byte)(finished ? 1 : 0));
+        dest.writeInt(cacheStatus.ordinal());
+        dest.writeLong(lastCacheTime);
+    }
+
+    public void writeToPreferences() {
+        PreferenceUtilities.writeToPreference(CacheStatusPreference, CacheStatusKey, cacheStatus.ordinal());
+        PreferenceUtilities.writeToPreference(CacheStatusPreference, CurrentCacheChannelKey, channelName);
+        PreferenceUtilities.writeToPreference(CacheStatusPreference, CurrentCacheIndexKey, currentIndex);
+        PreferenceUtilities.writeToPreference(CacheStatusPreference, TotalCacheCountKey, totalCount);
+        PreferenceUtilities.writeToPreference(CacheStatusPreference, CacheTypeKey, cacheType.ordinal());
+        PreferenceUtilities.writeToPreference(CacheStatusPreference, LastCacheTimeKey, lastCacheTime);
     }
 }

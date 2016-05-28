@@ -144,9 +144,9 @@ public class NewsDigestsAdapter extends DigestsAdapter {
     class NewsDigestCacheLatestResponseListener implements DigestCacheLatestResponseListener {
 
         @Override
-        public void onResponse(JSONArray digestJSONArray) {
+        public void onResponse(JSONObject digestJSONObject) {
             try {
-                List<NewsDigest> newsDigests = NewsDigestsJsonParser.instance.parseJsonToNewsDigestModels(digestJSONArray, channel);
+                List<NewsDigest> newsDigests = NewsDigestsJsonParser.instance.parseJsonToNewsDigestModels(digestJSONObject, channel);
                 updateNewsDigstsToStart(newsDigests);
             } catch (JSONException e) {
                 e.printStackTrace();
