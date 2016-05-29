@@ -3,17 +3,20 @@
     <dimen name="large_size_text">16dp</dimen>
     <dimen name="media_size_text">14dp</dimen>
     <dimen name="small_size_text">12dp</dimen>
-    <dimen name="button_height">16dp</dimen>
+    <dimen name="button_height">18dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="activity_margin">16dp</dimen>
-    <dimen name="app_bar_height">300dp</dimen>
+    <dimen name="wide_app_action_bar_height">300dp</dimen>
+    <dimen name="top_banner_area_height">240dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="narrow_app_action_bar_height">58dp</dimen>
 
     <!--digest view-->
     <dimen name="category_selector_bar_height">38dp</dimen>
     <dimen name="channel_selector_bar_height">36dp</dimen>
+    <dimen name="channel_head_bar">64dp</dimen>
     <dimen name="channel_item_height">32dp</dimen>
     <dimen name="channel_selector_bar_horizontal_padding">14dp</dimen>
     <dimen name="digest_image_height">72dp</dimen>

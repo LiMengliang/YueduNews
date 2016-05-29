@@ -1,8 +1,6 @@
 package com.redoc.yuedu.news.View;
 
-import android.app.Application;
 import android.content.Context;
-import android.opengl.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -10,14 +8,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.redoc.yuedu.R;
 import com.redoc.yuedu.bean.Digest;
 import com.redoc.yuedu.news.bean.NewsDigest;
-import com.redoc.yuedu.utilities.network.ImageLoaderOption;
-import com.redoc.yuedu.utilities.network.VolleyUtilities;
+import com.redoc.yuedu.utilities.network.LoadImageUtilities;
 import com.redoc.yuedu.view.DelayLoadImageControl;
-import com.redoc.yuedu.view.MainActivity;
 
 import static com.redoc.yuedu.news.View.NewsDigestViewType.*;
 
@@ -31,8 +26,6 @@ public class NewsDigestView implements DelayLoadImageControl {
     private TextView singleImageDigestSource;
     private TextView singleImageDigestContent;
     private ImageView singleImageDigestImage;
-    private ImageLoader singleImageLoader;
-    private ImageLoader.ImageListener singleImageLoadListener;
     // Multi images digest view
     private RelativeLayout multiImagesDigest;
     private TextView multiImageDigestTitle;
@@ -48,8 +41,6 @@ public class NewsDigestView implements DelayLoadImageControl {
     private ImageView photoSetDigestImageA;
     private ImageView photoSetDigestImageB;
 
-    private com.nostra13.universalimageloader.core.ImageLoader imageLoader;
-
     private FrameLayout rootView;
     public FrameLayout getRootView() {
         return rootView;
@@ -61,7 +52,6 @@ public class NewsDigestView implements DelayLoadImageControl {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         rootView = (FrameLayout)inflater.inflate(R.layout.widget_digest, null);
         initializeAllViews(rootView);
-        imageLoader = com.nostra13.universalimageloader.core.ImageLoader.getInstance();
         // TODO: Initialize view with digest model
     }
 
@@ -131,19 +121,19 @@ public class NewsDigestView implements DelayLoadImageControl {
             NewsDigest newsDigest = (NewsDigest)digest;
             switch (newsDigestViewType) {
                 case SingleImage:{
-                    imageLoader.displayImage(newsDigest.getDigestImages().get(0), singleImageDigestImage, ImageLoaderOption.getListOptions());
+                    LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(0), singleImageDigestImage);
                     break;
                 }
                 case MultiImages:{
-                    imageLoader.displayImage(newsDigest.getDigestImages().get(0), multiImageDigestImageA, ImageLoaderOption.getListOptions());
-                    imageLoader.displayImage(newsDigest.getDigestImages().get(1), multiImageDigestImageB, ImageLoaderOption.getListOptions());
-                    imageLoader.displayImage(newsDigest.getDigestImages().get(2), multiImageDigestImageC, ImageLoaderOption.getListOptions());
+                    LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(0), multiImageDigestImageA);
+                    LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(1), multiImageDigestImageB);
+                    LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(2), multiImageDigestImageC);
                     break;
                 }
                 case PhotSetDigest: {
-                    imageLoader.displayImage(newsDigest.getDigestImages().get(1), photoSetDigestMainImage, ImageLoaderOption.getListOptions());
-                    imageLoader.displayImage(newsDigest.getDigestImages().get(0), photoSetDigestImageA, ImageLoaderOption.getListOptions());
-                    imageLoader.displayImage(newsDigest.getDigestImages().get(2), photoSetDigestImageB, ImageLoaderOption.getListOptions());
+                    LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(1), photoSetDigestMainImage);
+                    LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(0), photoSetDigestImageA);
+                    LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(2), photoSetDigestImageB);
                     break;
                 }
             }
@@ -156,9 +146,6 @@ public class NewsDigestView implements DelayLoadImageControl {
         singleImageDigestContent = (TextView)rootView.findViewById(R.id.single_image_digest_digest);
         singleImageDigestSource = (TextView)rootView.findViewById(R.id.single_image_digest_source);
         singleImageDigestImage = (ImageView)rootView.findViewById(R.id.single_image_digest_image);
-        singleImageLoader = new ImageLoader(VolleyUtilities.RequestQueue, VolleyUtilities.BitmapCache);
-        singleImageLoadListener = ImageLoader.getImageListener(singleImageDigestImage,
-                R.drawable.default_digset_image, R.drawable.default_digset_image);
 
         multiImagesDigest = (RelativeLayout)rootView.findViewById(R.id.multi_image_digest);
         multiImageDigestTitle = (TextView)rootView.findViewById(R.id.multi_image_digest_title);

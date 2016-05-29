@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
@@ -23,6 +24,7 @@ import com.redoc.yuedu.controller.CacheStatus;
 import com.redoc.yuedu.controller.ChannelCache;
 import com.redoc.yuedu.utilities.cache.CacheUtilities;
 import com.redoc.yuedu.utilities.preference.PreferenceUtilities;
+import com.redoc.yuedu.view.widget.ToolBar;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class OfflineCacheActivity extends Activity {
     private TextView thirdLine;
     private AllCacheChannelAdapter allCacheChannelAdapter;
     private CacheProgressStatus cacheProgressStatus = null;
+    private ToolBar toolBar;
 
     public final static String CacheSettingPreference = "CacheSettingPreference";
 
@@ -53,21 +56,22 @@ public class OfflineCacheActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offline_cache);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         ListView allChannelsList = (ListView) findViewById(R.id.all_channels);
         ToggleButton startStopCache = (ToggleButton) findViewById(R.id.startStopCache);
         selectAll = (ToggleButton) findViewById(R.id.select_all);
-        ImageButton backButton = (ImageButton) findViewById(R.id.back);
         firstLine = (TextView) findViewById(R.id.cache_progress_line_one);
         secondLine = (TextView) findViewById(R.id.cache_progress_line_two);
         thirdLine = (TextView) findViewById(R.id.cache_progress_line_three);
+        toolBar = (ToolBar) findViewById(R.id.toolbar);
 
         startStopCache.setOnClickListener(new StartStopCacheClickedListener(checkedChannel, this));
         allCacheableChannels = getIntent().getParcelableArrayListExtra(UserSettingCategoryFragment.CacheableChannelKey);
         allCacheChannelAdapter = new AllCacheChannelAdapter(this, allCacheableChannels);
         allChannelsList.setAdapter(allCacheChannelAdapter);
         allChannelsList.setOnItemClickListener(new ChannelListItemClickedListener());
-        backButton.setOnClickListener(new BackClickedListener());
         selectAll.setOnClickListener(new SelectAllClickedListener());
+        toolBar.setBackClickListener(new BackClickedListener());
 
         WeakReference<CacheProgressHandler> weakCacheProgressHandlerReference =
                 new WeakReference<>(new CacheProgressHandler(firstLine,

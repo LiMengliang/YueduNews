@@ -28,6 +28,7 @@ public class UserSettingCategoryFragment extends Fragment {
 
     public static String CacheableChannelKey = "CacheableChannelsKey";
     public static Integer CacheProgress = 0x1200;
+    public static int SelectIconRequest = 0x001;
 
     private View settingView;
     private View offlineView;
@@ -92,7 +93,8 @@ public class UserSettingCategoryFragment extends Fragment {
     class UserIconClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-             Toast.makeText(getActivity(), "tet", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getActivity(), ImageSelectionActivity.class);
+            startActivityForResult(intent, UserSettingCategoryFragment.SelectIconRequest);
         }
     }
 }

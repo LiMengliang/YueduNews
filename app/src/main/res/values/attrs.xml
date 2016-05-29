@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="toolbar_title"/>
+    <attr name="toolbar_button_text"/>
+
+    <declare-styleable name="ToolbarWithButton">
+        <attr name="toolbar_title"/>
+        <attr name="toolbar_button_text"/>
+    </declare-styleable>
+</resources>
