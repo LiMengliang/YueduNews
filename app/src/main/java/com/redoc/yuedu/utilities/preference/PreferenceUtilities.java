@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 
 import com.redoc.yuedu.YueduApplication;
 
+import java.util.Set;
+
 /**
  * Created by limen on 2016/5/22.
  */
@@ -34,6 +36,13 @@ public class PreferenceUtilities {
         SharedPreferences preferences = YueduApplication.Context.getSharedPreferences(preferenceFileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(key, value);
+        return editor.commit();
+    }
+
+    public static boolean writeToPreference(String preferenceFileName, String key, Set<String> value) {
+        SharedPreferences preferences = YueduApplication.Context.getSharedPreferences(preferenceFileName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putStringSet(key, value);
         return editor.commit();
     }
 
@@ -67,6 +76,11 @@ public class PreferenceUtilities {
     public static boolean getBooleanValue(String preferenceFileName, String key) {
         SharedPreferences preferences = YueduApplication.Context.getSharedPreferences(preferenceFileName, Context.MODE_PRIVATE);
         return preferences.getBoolean(key, false);
+    }
+
+    public static Set<String> getStringSetValue(String preferenceFileName, String key) {
+        SharedPreferences preferences = YueduApplication.Context.getSharedPreferences(preferenceFileName, Context.MODE_PRIVATE);
+        return preferences.getStringSet(key, null);
     }
 
     public static boolean containsKey(String preferenceFileName, String key) {

@@ -7,12 +7,16 @@ import com.redoc.yuedu.controller.ChannelsManager;
 import com.redoc.yuedu.controller.DigestsAdapter;
 import com.redoc.yuedu.news.bean.AllNewsChannels;
 import com.redoc.yuedu.news.bean.NewsChannel;
+import com.redoc.yuedu.utilities.preference.PreferenceUtilities;
 import com.redoc.yuedu.view.ChannelFragment;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by limen on 2016/4/30.
@@ -23,6 +27,9 @@ public class NewsChannelsManager extends ChannelsManager {
     protected List<NewsChannel> getAllChannels() {
         return allChannels;
     }
+
+    public static String SelectedChannelsPreferenceKey = "SelectedChannelsKey";
+    public static String SelectedChannelsPreferenceFileName = "SelectedChannelsPreferenceFile";
 
     private Map<Channel, DigestsAdapter> channelAndDigestsAdapterMap = new HashMap<Channel, DigestsAdapter>();
 
@@ -58,13 +65,26 @@ public class NewsChannelsManager extends ChannelsManager {
             }
         };
         userSelectedChannels = new ArrayList<NewsChannel>();
-        addUserSelectedChannel(AllNewsChannels.headLine);
-        addUserSelectedChannel(AllNewsChannels.sociaty);
-        addUserSelectedChannel(AllNewsChannels.entertainment);
-        addUserSelectedChannel(AllNewsChannels.cellphone);
-        addUserSelectedChannel(AllNewsChannels.digital);
-        addUserSelectedChannel(AllNewsChannels.automobile);
-        addUserSelectedChannel(AllNewsChannels.realestate);
+        if(PreferenceUtilities.containsKey(SelectedChannelsPreferenceFileName, SelectedChannelsPreferenceKey)) {
+            Set<String> selectedChannelsId = PreferenceUtilities.getStringSetValue(SelectedChannelsPreferenceFileName, SelectedChannelsPreferenceKey);
+            for(NewsChannel channel : allChannels) {
+                for(String id : selectedChannelsId) {
+                    if(id.equals(channel.getChannelId())) {
+                        addUserSelectedChannel(channel);
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            addUserSelectedChannel(AllNewsChannels.headLine);
+            addUserSelectedChannel(AllNewsChannels.sociaty);
+            addUserSelectedChannel(AllNewsChannels.entertainment);
+            addUserSelectedChannel(AllNewsChannels.cellphone);
+            addUserSelectedChannel(AllNewsChannels.digital);
+            addUserSelectedChannel(AllNewsChannels.automobile);
+            addUserSelectedChannel(AllNewsChannels.realestate);
+        }
     }
 
     // TODO: Override this to make different channel have different view.
@@ -84,6 +104,7 @@ public class NewsChannelsManager extends ChannelsManager {
             userSelectedChannels.add((NewsChannel)channel);
             channel.setSelected(true);
         }
+        PreferenceUtilities.writeToPreference(SelectedChannelsPreferenceFileName, SelectedChannelsPreferenceKey, getSelectedChannelsId());
     }
 
     @Override
@@ -92,6 +113,7 @@ public class NewsChannelsManager extends ChannelsManager {
             userSelectedChannels.remove(channel);
             channel.setSelected(false);
         }
+        PreferenceUtilities.writeToPreference(SelectedChannelsPreferenceFileName, SelectedChannelsPreferenceKey, getSelectedChannelsId());
     }
 
     @Override
@@ -107,9 +129,17 @@ public class NewsChannelsManager extends ChannelsManager {
     protected DigestsAdapter getSupportDigestsAdapter(Channel channel) {
         // TODO: Different channel may have different digest adapter
         if(!channelAndDigestsAdapterMap.containsKey(channel) && channel.getClass() == NewsChannel.class) {
-            DigestsAdapter digestsManager = new NewsDigestsAdapter(context, (NewsChannel)channel);
-            channelAndDigestsAdapterMap.put(channel,digestsManager);
+            DigestsAdapter digestsAdapter = new NewsDigestsAdapter(context, (NewsChannel)channel);
+            channelAndDigestsAdapterMap.put(channel,digestsAdapter);
         }
         return channelAndDigestsAdapterMap.get(channel);
+    }
+
+    private Set<String> getSelectedChannelsId() {
+        Set<String> ids = new HashSet<>();
+        for(Channel channel : userSelectedChannels) {
+            ids.add(channel.getChannelId());
+        }
+        return ids;
     }
 }

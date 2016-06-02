@@ -37,7 +37,7 @@ public class AlbumnImagesAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return imagePaths.get(position);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class AlbumnImagesAdapter extends BaseAdapter {
         // }
         // else {
             Uri imageUri = Uri.parse("file://"+imagePaths.get(position));
-        LoadImageUtilities.displayImage(imageUri.toString(), imageView);
+        LoadImageUtilities.displayLocalImage(imageUri.toString(), imageView);
         // }
         return convertView;
     }

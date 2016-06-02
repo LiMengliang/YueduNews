@@ -1,7 +1,10 @@
 package com.redoc.yuedu.setting.view;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,6 +22,8 @@ import com.redoc.yuedu.YueduApplication;
 import com.redoc.yuedu.bean.CacheProgressStatus;
 import com.redoc.yuedu.controller.CacheStatus;
 import com.redoc.yuedu.controller.ChannelCache;
+import com.redoc.yuedu.utilities.cache.ACacheUtilities;
+import com.redoc.yuedu.utilities.network.LoadImageUtilities;
 import com.redoc.yuedu.view.MainActivity;
 
 /**
@@ -52,6 +57,11 @@ public class UserSettingCategoryFragment extends Fragment {
         offlineView.setOnClickListener(new OfflineViewClickListener());
         userIcon.setOnClickListener(new UserIconClickListener());
 
+        Bitmap cachedIcon = ACacheUtilities.getCacheImage(getActivity(), ImageSelectionActivity.usreIconCacheKey);
+        if(cachedIcon != null) {
+            userIcon.setImageBitmap(cachedIcon);
+        }
+
         ChannelCache.getInstance().AddHandler(new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -73,7 +83,13 @@ public class UserSettingCategoryFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        if(requestCode == SelectIconRequest && resultCode == Activity.RESULT_OK) {
+            String selectedPath = data.getExtras().getString(ImageSelectionActivity.selectedIconPath);
+            if(!selectedPath.equals("")) {
+                // userIcon.setImageURI(Uri.parse(selectedPath));
+                LoadImageUtilities.displayImage("file://"+selectedPath, userIcon);
+            }
+        }
     }
 
     class OfflineViewClickListener implements View.OnClickListener {

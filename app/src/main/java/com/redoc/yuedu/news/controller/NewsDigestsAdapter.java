@@ -3,8 +3,11 @@ package com.redoc.yuedu.news.controller;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.volley.Response;
+import com.redoc.yuedu.R;
+import com.redoc.yuedu.YueduApplication;
 import com.redoc.yuedu.bean.Channel;
 import com.redoc.yuedu.controller.CacheDigestProvider;
 import com.redoc.yuedu.controller.DigestCacheLatestResponseListener;
@@ -16,6 +19,7 @@ import com.redoc.yuedu.news.View.NewsDigestView;
 import com.redoc.yuedu.news.bean.NewsChannel;
 import com.redoc.yuedu.news.bean.NewsDigest;
 import com.redoc.yuedu.news.bean.NewsDigestsJsonParser;
+import com.redoc.yuedu.utilities.network.NetworkUtilities;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,7 +36,8 @@ public class NewsDigestsAdapter extends DigestsAdapter {
     private Context context;
     private NewsChannel channel;
     private int index = 0;
-    private DigestsProvider digestsProvider;
+    private WebDigestsProvider webDigestsProvider;
+    private CacheDigestProvider cacheDigestprovider;
     private List<NewsDigest> newsDigests;
     // record number of digest images loadded while fetchLatest, in fetchLatest() will set this value to 0,
     // which means each time call a fetchLatest(), adapter will load 10 images automatically, regardless if
@@ -44,8 +49,8 @@ public class NewsDigestsAdapter extends DigestsAdapter {
         this.context = context;
         this.channel = channel;
         // TODO: Combine web and cache provider here
-        digestsProvider = // new WebDigestsProvider(new NewsDigestLatestResponseListener(), new NewsDigestMoreResponseListener());
-                new CacheDigestProvider(new NewsDigestCacheLatestResponseListener(), new NewsDigsetCacheMoreResponseListener());
+        webDigestsProvider = new WebDigestsProvider(new NewsDigestLatestResponseListener(), new NewsDigestMoreResponseListener());
+        cacheDigestprovider = new CacheDigestProvider(new NewsDigestCacheLatestResponseListener(), new NewsDigsetCacheMoreResponseListener());
         newsDigests = new ArrayList<NewsDigest>();
     }
 
@@ -53,15 +58,21 @@ public class NewsDigestsAdapter extends DigestsAdapter {
     public void fetchLatest() {
         // TODO: only use web provider when network is available
         newsDigests.clear();
+        DigestsProvider digestsProvider = getDigestProvider();
+        if(digestsProvider == cacheDigestprovider) {
+            Toast toast = Toast.makeText(context, YueduApplication.Context.getResources().getString(R.string.no_network_read_cache),
+                    Toast.LENGTH_SHORT);
+            toast.show();
+        }
         digestsProvider.fetchLatest(channel, context, this);
-        index += 20;
+        index = 20;
         countLoadLatestDigestImages = 0;
     }
 
     @Override
     public void fetchMore() {
         // TODO: only use web provider when network is available
-        digestsProvider.fetchMore(channel, index, context, this);
+        getDigestProvider().fetchMore(channel, index, context, this);
         index += 20;
     }
 
@@ -100,6 +111,13 @@ public class NewsDigestsAdapter extends DigestsAdapter {
             fetchMore();
         }
         return convertView;
+    }
+
+    private DigestsProvider getDigestProvider() {
+        if(NetworkUtilities.isWifiAvailable()) {
+            return webDigestsProvider;
+        }
+        return cacheDigestprovider;
     }
 
     private void updateNewsDigstsToStart(List<NewsDigest> digests) {

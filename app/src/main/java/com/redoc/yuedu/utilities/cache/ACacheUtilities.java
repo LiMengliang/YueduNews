@@ -1,6 +1,7 @@
 package com.redoc.yuedu.utilities.cache;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 /**
  * Created by limen on 2016/5/15.
@@ -20,5 +21,15 @@ public class ACacheUtilities {
      */
     public static String getCacheStr(Context context, String key) {
         return ACache.get(context).getAsString(key);
+    }
+
+    public static void setCacheImage(Context context, String key, Bitmap bitmap) {
+        if(bitmap != null) {
+            ACache.get(context).put(key, bitmap);
+        }
+    }
+
+    public static Bitmap getCacheImage(Context context, String key) {
+        return ACache.get(context).getAsBitmap(key);
     }
 }

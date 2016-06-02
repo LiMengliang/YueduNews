@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.redoc.yuedu.R;
 import com.redoc.yuedu.bean.Digest;
@@ -14,11 +14,10 @@ import com.redoc.yuedu.controller.DigestsAdapter;
 
 public class DigestsChannelFragment extends ChannelFragment {
 
-    private boolean fragmentCreated = false;
-    // private TextView mTextView;
     private ListView mDigestsList;
     private DigestsAdapter digestsAdapter;
     private int lastFirstVisiblePosition = 0;
+    private boolean canFetchLatestNews = true;
     private final static String lastVisiblePosition = "VisiblePosition";
 
     /**
@@ -48,16 +47,13 @@ public class DigestsChannelFragment extends ChannelFragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_digest_channel, container, false);
         mDigestsList = (ListView)rootView.findViewById(R.id.digestsList);
-        TextView textView = new TextView(getContext());
-        textView.setText(R.string.fetch_news_ing);
-        mDigestsList.addFooterView(textView);
+        View listFooter = inflater.inflate(R.layout.widegt_fetch_more_digest_notification, null, false);
+        mDigestsList.addFooterView(listFooter);
         mDigestsList.setAdapter(digestsAdapter);
         mDigestsList.setOnScrollListener(new DigestListOnScrollListener());
-        // digestsAdapter.setAdaptedListView(mDigestsList);
         if(shouldRefreshChannel()) {
             digestsAdapter.fetchLatest();
         }
-        fragmentCreated = true;
         return rootView;
     }
 
@@ -72,12 +68,25 @@ public class DigestsChannelFragment extends ChannelFragment {
         return lastFirstVisiblePosition == 0;
     }
 
+    @Override
+    public void refresh() {
+        // digestsAdapter.fetchLatest();
+        if(canFetchLatestNews) {
+            mDigestsList.setSelection(0);
+            mDigestsList.smoothScrollToPosition(0);
+            digestsAdapter.fetchLatest();
+            Toast toast = Toast.makeText(getContext(), "获取最新新闻", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
     // TODO: This listener could be a public class, if we have different digest channel fragment.
     class DigestListOnScrollListener implements AbsListView.OnScrollListener {
 
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
             if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                canFetchLatestNews = true;
                 if (view.getLastVisiblePosition() == view.getCount() - 1) {
                     digestsAdapter.fetchMore();
                 }
@@ -90,6 +99,9 @@ public class DigestsChannelFragment extends ChannelFragment {
                         delayLoadImageControl.loadImages((Digest) digestsAdapter.getItem(i + firstVisiblePosition));
                     }
                 }
+            }
+            else {
+                canFetchLatestNews = false;
             }
         }
 

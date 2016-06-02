@@ -11,10 +11,8 @@ import com.android.volley.toolbox.Volley;
  */
 public class VolleyUtilities {
     public static RequestQueue RequestQueue;
-    public static BitmapCache BitmapCache;
 
     public static void initialize(Context context) {
         RequestQueue = Volley.newRequestQueue(context);
-        BitmapCache = new BitmapCache();
     }
 }

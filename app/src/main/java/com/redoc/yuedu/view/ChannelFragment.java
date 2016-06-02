@@ -8,4 +8,6 @@ import android.support.v4.app.Fragment;
 public abstract class ChannelFragment extends Fragment {
 
     public abstract boolean shouldRefreshChannel();
+
+    public abstract void refresh();
 }

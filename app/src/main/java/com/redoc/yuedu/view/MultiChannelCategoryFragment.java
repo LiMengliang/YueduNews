@@ -38,7 +38,7 @@ import com.redoc.yuedu.view.utilities.AnimationUtilities;
  * Use the {@link MultiChannelCategoryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MultiChannelCategoryFragment extends Fragment {
+public class MultiChannelCategoryFragment extends Fragment implements RefreshableCategory {
 
     private View mRootView;
     private ViewPager mChannelsViewPager;
@@ -199,6 +199,11 @@ public class MultiChannelCategoryFragment extends Fragment {
                 checkView.setAlpha(0.5f);
             }
         }
+    }
+
+    @Override
+    public void refresh() {
+        channelManager.getOrCreateFragmentForChannel(currentSelectedChannel).refresh();
     }
 
     class ChannelNameClickListener implements View.OnClickListener {

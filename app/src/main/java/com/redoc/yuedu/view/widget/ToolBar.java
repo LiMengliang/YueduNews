@@ -56,6 +56,14 @@ public class ToolBar extends RelativeLayout {
         backButton.setOnClickListener(onClickListener);
     }
 
+    public void setRightButtonClickListener(OnClickListener onClickListener) {
+        rightButton.setOnClickListener(onClickListener);
+    }
+
+    public void setEnableToRightButton(boolean enabled) {
+        rightButton.setEnabled(enabled);
+    }
+
     // public ToolBar(Context context) {
     //     super(context);
     //     rootView = ((LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_action_bar, null);

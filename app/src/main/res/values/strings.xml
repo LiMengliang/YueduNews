@@ -6,6 +6,10 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
 
+    <!--Main activity-->
+    <string name="refresh">刷新</string>
+    <string name="no_network_read_cache">无可用网络，读取本地已缓存的新闻</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_main">MainActivity</string>
@@ -13,7 +17,8 @@
     <string name="title_item_detail">Item Detail</string>
 
     <string name="fetch_news_digest_failed">"获取新闻失败..."</string>
-    <string name="fetch_news_ing">"正在获取新闻..."</string>
+    <string name="fetch_news_ing">"正在获取更多新闻..."</string>
+    <string name="fetch_latest_news_ing">"正在获取最新新闻..."</string>
     <string name="yuedu">"悦读"</string>
 
     <!--Setting Fragment-->

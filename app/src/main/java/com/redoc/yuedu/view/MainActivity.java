@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private LayoutInflater layoutInflater;
     private Map<View, Category> categoryButtonAndName = new HashMap<View, Category>();
     private Fragment currentActiveFragment;
+    private Category currentSelectedCategory;
 //
     // public static RequestQueue VolleyRequestQueue;
     // public static BitmapCache BitmapCache;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private void initializeCategories() {
         int index = 0;
         for(Category category : categoriesManager.getCategories()) {
+            // TODO: I should create a CategoryButton instead of operating on resource file directly.
             View categoryButton = layoutInflater.inflate(R.layout.widget_category_button, null);
             TextView categoryNameTextView = (TextView) categoryButton.findViewById(R.id.category_name);
             categoryNameTextView.setText(category.getCategoryName());
@@ -80,18 +82,61 @@ public class MainActivity extends AppCompatActivity {
          getSupportFragmentManager().beginTransaction().hide(currentActiveFragment).add(R.id.contentView, fragment).commit();
         }
         currentActiveFragment = fragment;
+        currentSelectedCategory = category;
     }
 
     private void addFirstCategoryFragment(Category category) {
         Fragment fragment = categoriesManager.getOrCreateFragment(category);
         getSupportFragmentManager().beginTransaction().add(R.id.contentView, fragment).commit();
         currentActiveFragment = fragment;
+        currentSelectedCategory = category;
+        View categoryButton = null;
+        for(Map.Entry entry : categoryButtonAndName.entrySet()) {
+            if(entry.getValue() == category) {
+                categoryButton = (View)entry.getKey();
+                break;
+            }
+        }
+        if(categoryButton != null) {
+            LinearLayout cateogryButtonView = (LinearLayout)(categoryButton.findViewById(R.id.category_button));
+            LinearLayout refreshButtonView = (LinearLayout)(categoryButton.findViewById(R.id.refresh_button));
+            cateogryButtonView.setVisibility(View.GONE);
+            refreshButtonView.setVisibility(View.VISIBLE);
+        }
     }
 
     class CategoryButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            switchCategoryFragments(categoryButtonAndName.get(v));
+            Category category = categoryButtonAndName.get(v);
+            Fragment fragment = categoriesManager.getOrCreateFragment(category);
+            if(category == currentSelectedCategory) {
+                if(fragment instanceof RefreshableCategory) {
+                    ((RefreshableCategory)fragment).refresh();
+                }
+            }
+            else {
+                // switch to category
+                switchCategoryFragments(categoryButtonAndName.get(v));
+                for (View button : categoryButtonAndName.keySet()) {
+                    LinearLayout cateogryButtonView = (LinearLayout) button.findViewById(R.id.category_button);
+                    LinearLayout refreshButtonView = (LinearLayout) button.findViewById(R.id.refresh_button);
+                    if (button == v) {
+                        if(fragment instanceof RefreshableCategory) {
+                            cateogryButtonView.setVisibility(View.GONE);
+                            refreshButtonView.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            cateogryButtonView.setVisibility(View.VISIBLE);
+                            refreshButtonView.setVisibility(View.GONE);
+                        }
+                    }
+                    else {
+                        cateogryButtonView.setVisibility(View.VISIBLE);
+                        refreshButtonView.setVisibility(View.GONE);
+                    }
+                }
+            }
         }
     }
 }

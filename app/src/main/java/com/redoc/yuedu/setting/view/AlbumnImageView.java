@@ -16,6 +16,7 @@ public class AlbumnImageView {
     public View getRootView() {
         return rootView;
     }
+    private ImageView selector;
 
     private ImageView imageView;
     public ImageView getImageView() {
@@ -24,5 +25,15 @@ public class AlbumnImageView {
     public AlbumnImageView(Context context) {
         rootView = ((LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.widget_albumn_image_item, null);
         imageView = (ImageView)rootView.findViewById(R.id.albumn_image_item);
+        selector = (ImageView)rootView.findViewById(R.id.selector);
+    }
+
+    public void setSelected(boolean selected) {
+        if(selected) {
+            selector.setVisibility(View.VISIBLE);
+        }
+        else {
+            selector.setVisibility(View.INVISIBLE);
+        }
     }
 }
