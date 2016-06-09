@@ -101,7 +101,7 @@ public class NewsDigestsAdapter extends DigestsAdapter {
         ((NewsDigestView)convertView.getTag()).updateView(newsDigests.get(position));
         if(maxLoadLatestDigestIamges > countLoadLatestDigestImages) {
             countLoadLatestDigestImages++;
-            ((NewsDigestView)convertView.getTag()).loadImages(newsDigests.get(position));
+         ((NewsDigestView)convertView.getTag()).loadImages(newsDigests.get(position));
         }
         else {
             ((NewsDigestView)convertView.getTag()).clearImages();

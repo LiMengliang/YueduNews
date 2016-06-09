@@ -51,7 +51,6 @@ public class NewsChannelsManager extends ChannelsManager {
                 add(AllNewsChannels.realestate);
                 add(AllNewsChannels.eGame);
                 add(AllNewsChannels.pickOut);
-                add(AllNewsChannels.radio);
                 add(AllNewsChannels.emotion);
                 add(AllNewsChannels.movie);
                 add(AllNewsChannels.nba);

@@ -10,8 +10,11 @@ import android.widget.TextView;
 
 import com.redoc.yuedu.R;
 import com.redoc.yuedu.bean.Digest;
+import com.redoc.yuedu.controller.ChannelCache;
 import com.redoc.yuedu.news.bean.NewsDigest;
+import com.redoc.yuedu.utilities.cache.ACacheUtilities;
 import com.redoc.yuedu.utilities.network.LoadImageUtilities;
+import com.redoc.yuedu.utilities.network.NetworkUtilities;
 import com.redoc.yuedu.view.DelayLoadImageControl;
 
 import static com.redoc.yuedu.news.View.NewsDigestViewType.*;
@@ -40,15 +43,17 @@ public class NewsDigestView implements DelayLoadImageControl {
     private ImageView photoSetDigestMainImage;
     private ImageView photoSetDigestImageA;
     private ImageView photoSetDigestImageB;
-
     private FrameLayout rootView;
     public FrameLayout getRootView() {
         return rootView;
     }
 
     private NewsDigestViewType newsDigestViewType;
+    private Context context;
+    private boolean isImageCleared = true;
 
     public NewsDigestView(Context context) {
+        this.context = context;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         rootView = (FrameLayout)inflater.inflate(R.layout.widget_digest, null);
         initializeAllViews(rootView);
@@ -95,24 +100,25 @@ public class NewsDigestView implements DelayLoadImageControl {
 
     @Override
     public void clearImages() {
-            switch (newsDigestViewType) {
-                case SingleImage:{
-                    singleImageDigestImage.setImageResource(R.color.lightGray);
-                    break;
-                }
-                case MultiImages: {
-                    multiImageDigestImageA.setImageResource(R.color.lightGray);
-                    multiImageDigestImageB.setImageResource(R.color.lightGray);
-                    multiImageDigestImageC.setImageResource(R.color.lightGray);
-                    break;
-                }
-                case PhotSetDigest: {
-                    photoSetDigestMainImage.setImageResource(R.color.lightGray);
-                    photoSetDigestImageA.setImageResource(R.color.lightGray);
-                    photoSetDigestImageB.setImageResource(R.color.lightGray);
-                    break;
-                }
+        switch (newsDigestViewType) {
+            case SingleImage:{
+                singleImageDigestImage.setImageResource(R.color.lightGray);
+                break;
             }
+            case MultiImages: {
+                multiImageDigestImageA.setImageResource(R.color.lightGray);
+                multiImageDigestImageB.setImageResource(R.color.lightGray);
+                multiImageDigestImageC.setImageResource(R.color.lightGray);
+                break;
+            }
+            case PhotSetDigest: {
+                photoSetDigestMainImage.setImageResource(R.color.lightGray);
+                photoSetDigestImageA.setImageResource(R.color.lightGray);
+                photoSetDigestImageB.setImageResource(R.color.lightGray);
+                break;
+            }
+        }
+        isImageCleared = true;
     }
 
     @Override
@@ -121,23 +127,66 @@ public class NewsDigestView implements DelayLoadImageControl {
             NewsDigest newsDigest = (NewsDigest)digest;
             switch (newsDigestViewType) {
                 case SingleImage:{
-                    LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(0), singleImageDigestImage);
+                    if(NetworkUtilities.isWifiAvailable()) {
+                        LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(0), singleImageDigestImage);
+                    }else {
+                        singleImageDigestImage.setImageBitmap(LoadImageUtilities.resizeBitmapToAcceptableSize(ACacheUtilities.getCacheImage(context,
+                                ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(0), true))));
+                        // singleImageDigestImage.setImageBitmap(ACacheUtilities.getCacheImage(context,
+                        //         ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(0), true)));
+                    }
                     break;
                 }
                 case MultiImages:{
-                    LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(0), multiImageDigestImageA);
-                    LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(1), multiImageDigestImageB);
-                    LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(2), multiImageDigestImageC);
+                    if(NetworkUtilities.isWifiAvailable()) {
+                        LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(0), multiImageDigestImageA);
+                        LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(1), multiImageDigestImageB);
+                        LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(2), multiImageDigestImageC);
+                    }else {
+                        multiImageDigestImageA.setImageBitmap(LoadImageUtilities.resizeBitmapToAcceptableSize(ACacheUtilities.getCacheImage(context,
+                                ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(0), true))));
+                        multiImageDigestImageB.setImageBitmap(LoadImageUtilities.resizeBitmapToAcceptableSize(ACacheUtilities.getCacheImage(context,
+                                ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(1), true))));
+                        multiImageDigestImageC.setImageBitmap(LoadImageUtilities.resizeBitmapToAcceptableSize(ACacheUtilities.getCacheImage(context,
+                                ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(2), true))));
+                        // multiImageDigestImageA.setImageBitmap(ACacheUtilities.getCacheImage(context,
+                        //         ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(0), true)));
+                        // multiImageDigestImageB.setImageBitmap(ACacheUtilities.getCacheImage(context,
+                        //         ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(1), true)));
+                        // multiImageDigestImageC.setImageBitmap(ACacheUtilities.getCacheImage(context,
+                        //         ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(2), true)));
+                    }
                     break;
                 }
                 case PhotSetDigest: {
-                    LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(1), photoSetDigestMainImage);
-                    LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(0), photoSetDigestImageA);
-                    LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(2), photoSetDigestImageB);
+                    if(NetworkUtilities.isWifiAvailable()) {
+                        LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(1), photoSetDigestMainImage);
+                        LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(0), photoSetDigestImageA);
+                        LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(2), photoSetDigestImageB);
+                    }else {
+                        photoSetDigestMainImage.setImageBitmap(LoadImageUtilities.resizeBitmapToAcceptableSize(ACacheUtilities.getCacheImage(context,
+                                ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(1), true))));
+                        photoSetDigestImageA.setImageBitmap(LoadImageUtilities.resizeBitmapToAcceptableSize(ACacheUtilities.getCacheImage(context,
+                                ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(0), true))));
+                        photoSetDigestImageB.setImageBitmap(LoadImageUtilities.resizeBitmapToAcceptableSize(ACacheUtilities.getCacheImage(context,
+                                ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(2), true))));
+                        // photoSetDigestMainImage.setImageBitmap(ACacheUtilities.getCacheImage(context,
+                        //         ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(1), true)));
+                        // photoSetDigestImageA.setImageBitmap(ACacheUtilities.getCacheImage(context,
+                        //         ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(0), true)));
+                        // photoSetDigestImageB.setImageBitmap(ACacheUtilities.getCacheImage(context,
+                        //         ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(2), true)));
+                    }
                     break;
                 }
             }
         }
+        isImageCleared = false;
+    }
+
+    @Override
+    public boolean isImageCleared() {
+        return isImageCleared;
     }
 
     private void initializeAllViews(View rootView) {

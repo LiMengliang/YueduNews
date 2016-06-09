@@ -2,6 +2,7 @@ package com.redoc.yuedu.utilities.network;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -16,6 +17,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.redoc.yuedu.R;
 
@@ -64,7 +66,7 @@ public class LoadImageUtilities {
                 .imageDownloader(new BaseImageDownloader(context, 5 *
                         1000, 30 * 1000)) // connectTimeout (5 s),
                         // readTimeout(30)// 超时时间
-                .writeDebugLogs() // Remove for release app
+                // .writeDebugLogs() // Remove for release app
                 .build();
         // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config);// 全局初始化此配置
@@ -77,7 +79,7 @@ public class LoadImageUtilities {
                 .showImageForEmptyUri(R.drawable.default_digset_image)
                         // // 设置图片加载/解码过程中错误时候显示的图片
                 .showImageOnFail(R.drawable.default_digset_image)
-                .cacheInMemory(true)
+                .cacheInMemory(false)
                         // 设置下载的图片是否缓存在内存中
                 .cacheOnDisc(true)
                         // 设置下载的图片是否缓存在SD卡中
@@ -94,10 +96,11 @@ public class LoadImageUtilities {
                         // delayInMillis为你设置的延迟时间
                         // 设置图片加入缓存前，对bitmap进行设置
                         // 。preProcessor(BitmapProcessor preProcessor)
-                .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
+                .resetViewBeforeLoading(false)// 设置图片在下载前是否重置，复位
                         // .displayer(new RoundedBitmapDisplayer(20))//是否设置为圆角，弧度为多少
-                .displayer(new FadeInBitmapDisplayer(500))// 淡入
-                .displayer(new RoundedBitmapDisplayer(7))
+                // .displayer(new FadeInBitmapDisplayer(500))// 淡入
+                // don't use RoundedBitmapDisplyaer, it will create RGB_888 image
+                // .displayer(new RoundedBitmapDisplayer(7))
                 .build();
 
     private static DisplayImageOptions nonCacheOption = new DisplayImageOptions.Builder()
@@ -124,10 +127,11 @@ public class LoadImageUtilities {
                     // delayInMillis为你设置的延迟时间
                     // 设置图片加入缓存前，对bitmap进行设置
                     // 。preProcessor(BitmapProcessor preProcessor)
-            .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
+            .resetViewBeforeLoading(false)// 设置图片在下载前是否重置，复位
                     // .displayer(new RoundedBitmapDisplayer(20))//是否设置为圆角，弧度为多少
-            .displayer(new FadeInBitmapDisplayer(500))// 淡入
-            .displayer(new RoundedBitmapDisplayer(7))
+            // .displayer(new FadeInBitmapDisplayer(500))// 淡入
+            // don't use RoundedBitmapDisplyaer, it will create RGB_888 image
+                    // .displayer(new RoundedBitmapDisplayer(7))
             .build();
 
     public static void displayImage(String uri, ImageView imageView) {
@@ -138,7 +142,28 @@ public class LoadImageUtilities {
         imageLoader.displayImage(uri, imageView, nonCacheOption);
     }
 
-    public static Bitmap loadBitmapFromUriAsync(String uri) {
-        return imageLoader.loadImageSync(uri);
+    public static Bitmap loadBitmapFromUriSync(String uri) {
+        return imageLoader.loadImageSync(uri, defaultOption);
+    }
+
+    public static void loadBitmapFromUriAsync(String uri, ImageLoadingListener listener) {
+        imageLoader.loadImage(uri, defaultOption, listener);
+    }
+
+    public static Bitmap resizeBitmapToAcceptableSize(Bitmap bitmap)
+    {
+        if(bitmap != null) {
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            if(width * height > 300 * 300) {
+                float widthScale = 300/(float)width;
+                float heightScale = 300/(float)height;
+                float scale = widthScale > heightScale ? heightScale : widthScale;
+                Matrix matrix = new Matrix();
+                matrix.postScale(scale, scale);
+                return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+            }
+        }
+        return bitmap;
     }
 }

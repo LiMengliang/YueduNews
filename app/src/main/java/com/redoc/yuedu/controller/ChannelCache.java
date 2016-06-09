@@ -1,21 +1,32 @@
 package com.redoc.yuedu.controller;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+import android.view.View;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.redoc.yuedu.bean.CacheProgressStatus;
 import com.redoc.yuedu.bean.CacheTask;
 import com.redoc.yuedu.bean.CacheType;
+import com.redoc.yuedu.bean.CacheableChannel;
 import com.redoc.yuedu.bean.Channel;
 import com.redoc.yuedu.setting.view.OfflineCacheActivity;
+import com.redoc.yuedu.utilities.cache.ACache;
 import com.redoc.yuedu.utilities.cache.ACacheUtilities;
+import com.redoc.yuedu.utilities.network.LoadImageUtilities;
 import com.redoc.yuedu.utilities.network.VolleyUtilities;
 import com.redoc.yuedu.utilities.preference.PreferenceUtilities;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,14 +74,21 @@ public class ChannelCache {
         progressHandlers.add(handler);
     }
 
-    public String getChannelCacheKey(Channel channel, int index, boolean userCache) {
+    // public String getChannelCacheKey(Channel channel, int index, boolean userCache) {
+    //     if(userCache) {
+    //         return channel.getHttpLink(index) + "ACache";
+    //     }
+    //     return channel.getChannelId();
+    // }
+
+    public static String getChannelCacheKey(String httpLink, boolean userCache) {
         if(userCache) {
-            return channel.getHttpLink(index) + "ACache";
+            return httpLink + "ACache";
         }
-        return channel.getChannelId();
+        return httpLink;
     }
 
-    public void startCache(List<Channel> channelsToCache, Context context) {
+    public void startCache(List<CacheableChannel> channelsToCache, Context context) {
         this.status = CacheStatus.InProgress;
         this.context = context;
         this.currentExecutingTaskIndex = -1;
@@ -87,27 +105,78 @@ public class ChannelCache {
         executeNextDigestsTask();
     }
 
-    private List<CacheTask> generateDigestCacheTasks(List<Channel> channels) {
+    private List<CacheTask> generateDigestCacheTasks(List<CacheableChannel> channels) {
         List<CacheTask> tasks = new ArrayList<>();
-        for(Channel channel : channels) {
+        for(CacheableChannel channel : channels) {
             int tempIndex = 0;
             while(tempIndex < maxDigestsToCache) {
-                tasks.add(new CacheTask(channel, CacheType.Digest, tempIndex, maxDigestsToCache));
+                String httpLink = channel.getHttpLink(tempIndex);
+                tasks.add(new CacheTask(httpLink, channel, CacheType.Digest));
                 tempIndex += 20;
             }
         }
         return tasks;
     }
 
+    private void notifyIfAllTasksAreExecuted() {
+        for(CacheTask tempTask : cacheTasks) {
+            if(!tempTask.isExecuted()) {
+                return;
+            }
+        }
+        // Finish all tasks, Send cache status by handlers
+        for(Handler handler : progressHandlers) {
+            Message message = new Message();
+            message.what = ProgressMessage;
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(ProgressMessageKey, new CacheProgressStatus(
+                    "", CacheType.Digest, maxDigestsToCache, 0, CacheStatus.NotStarted, new Date().getTime()));
+            message.setData(bundle);
+            handler.sendMessage(message);
+        }
+        status = CacheStatus.NotStarted;
+    }
+
+    private IndexAndAllCounts getIndexOfDigestImageTask(CacheTask cacheTask) {
+        List<CacheTask> tasks = new ArrayList<CacheTask>();
+        for(CacheTask task : cacheTasks) {
+            if(task.getCacheType() == cacheTask.getCacheType() && task.getChannel() == cacheTask.getChannel()) {
+                tasks.add(task);
+            }
+        }
+        return new IndexAndAllCounts(tasks.indexOf(cacheTask), tasks.size());
+    }
+
     private void executeNextDigestsTask() {
         currentExecutingTaskIndex += 1;
+        int totalCount = 0;
+        int index = 0;
         if(cacheTasks.size() <= currentExecutingTaskIndex) {
             return;
         }
         CacheTask cacheTask = cacheTasks.get(currentExecutingTaskIndex);
-        Channel channel = cacheTask.getChannel();
-        String httpLink = channel.getHttpLink(cacheTask.getCurrentIndex());
-
+        switch (cacheTask.getCacheType())
+        {
+            case Digest:
+                // Queue volley request
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(cacheTask.getHttpLink(), null,
+                        new DigestResponseListener(cacheTasks, context),
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                            }
+                        });
+                VolleyUtilities.RequestQueue.add(jsonObjectRequest);
+                break;
+            case Image:
+                LoadImageUtilities.loadBitmapFromUriAsync(cacheTask.getHttpLink(), new CacheImageLoadListener(cacheTask, context));
+                IndexAndAllCounts indexAndAllCounts = getIndexOfDigestImageTask(cacheTask);
+                totalCount = indexAndAllCounts.allCount;
+                index = indexAndAllCounts.index;
+                break;
+            case Detail:
+                break;
+        }
         // Send cache status by handlers
         for(Handler handler : progressHandlers) {
             Message message = new Message();
@@ -115,22 +184,14 @@ public class ChannelCache {
             Bundle bundle = new Bundle();
             bundle.putParcelable(ProgressMessageKey, new CacheProgressStatus(
                     cacheTask.getChannel().getChannelName(), cacheTask.getCacheType(),
-                    maxDigestsToCache, cacheTask.getCurrentIndex() + 20, status, new Date().getTime()));
+                    totalCount, index, status, new Date().getTime()));
             message.setData(bundle);
             handler.sendMessage(message);
         }
-        // Queue volley request
-        StringRequest stringRequest = new StringRequest(httpLink,
-                new DigestResponseListener(cacheTasks, context),
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                });
-        VolleyUtilities.RequestQueue.add(stringRequest);
+        // Log.i("Progress", cacheTask.getChannel().getChannelName() + index + "/" + totalCount);
     }
 
-    class DigestResponseListener implements Response.Listener<String> {
+    class DigestResponseListener implements Response.Listener<JSONObject> {
         private Context context;
         private List<CacheTask> tasks;
         public DigestResponseListener(List<CacheTask>tasks, Context context) {
@@ -139,32 +200,63 @@ public class ChannelCache {
         }
 
         @Override
-        public void onResponse(String value) {
+        public void onResponse(JSONObject value) {
             CacheTask task = tasks.get(currentExecutingTaskIndex);
-            tasks.get(currentExecutingTaskIndex).setExecuted(true);
-            String key = getChannelCacheKey(task.getChannel(), task.getCurrentIndex(), true);
-            if(value != null && !value.isEmpty()) {
-                ACacheUtilities.setCacheStr(context, key, value);
+            String key = getChannelCacheKey(task.getHttpLink(), true);
+            String stringValue = value.toString();
+            if(stringValue != null && !stringValue.isEmpty()) {
+                ACacheUtilities.setCacheStr(context, key, stringValue);
             }
+            task.setExecuted(true);
+            // Add more task to tasks
+            CacheableChannel channel = task.getChannel();
+            tasks.addAll(channel.detectMoreCacheTaskFromDigest(value, task));
+
             if(status == CacheStatus.InProgress) {
                 executeNextDigestsTask();
             }
-            for(CacheTask tempTask : tasks) {
-                if(!tempTask.isExecuted()) {
-                    return;
-                }
+            notifyIfAllTasksAreExecuted();
+        }
+    }
+
+    class CacheImageLoadListener implements ImageLoadingListener {
+        private CacheTask task;
+        private Context context;
+        public CacheImageLoadListener(CacheTask task, Context context) {
+            this.task = task;
+            this.context = context;
+        }
+        @Override
+        public void onLoadingStarted(String s, View view) {
+
+        }
+
+        @Override
+        public void onLoadingFailed(String s, View view, FailReason failReason) {
+        }
+
+        @Override
+        public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+            ACacheUtilities.setCacheImage(context, getChannelCacheKey(task.getHttpLink(), true), bitmap);
+            task.setExecuted(true);
+            if(status == CacheStatus.InProgress) {
+                executeNextDigestsTask();
             }
-            // Finish all tasks, Send cache status by handlers
-            for(Handler handler : progressHandlers) {
-                Message message = new Message();
-                message.what = ProgressMessage;
-                Bundle bundle = new Bundle();
-                bundle.putParcelable(ProgressMessageKey, new CacheProgressStatus(
-                        "", CacheType.Digest, maxDigestsToCache, 0, CacheStatus.NotStarted, new Date().getTime()));
-                message.setData(bundle);
-                handler.sendMessage(message);
-            }
-            status = CacheStatus.NotStarted;
+            notifyIfAllTasksAreExecuted();
+        }
+
+        @Override
+        public void onLoadingCancelled(String s, View view) {
+
+        }
+    }
+
+    class IndexAndAllCounts {
+        public int index;
+        public int allCount;
+        public IndexAndAllCounts(int index, int allCount) {
+            this.index = index;
+            this.allCount = allCount;
         }
     }
 }

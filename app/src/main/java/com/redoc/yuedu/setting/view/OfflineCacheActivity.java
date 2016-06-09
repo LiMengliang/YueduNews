@@ -19,6 +19,7 @@ import com.redoc.yuedu.R;
 import com.redoc.yuedu.YueduApplication;
 import com.redoc.yuedu.bean.CacheProgressStatus;
 import com.redoc.yuedu.bean.CacheType;
+import com.redoc.yuedu.bean.CacheableChannel;
 import com.redoc.yuedu.bean.Channel;
 import com.redoc.yuedu.controller.CacheStatus;
 import com.redoc.yuedu.controller.ChannelCache;
@@ -33,8 +34,8 @@ import java.util.List;
 
 public class OfflineCacheActivity extends Activity {
 
-    private ArrayList<Channel> allCacheableChannels;
-    private List<Channel> checkedChannel = new ArrayList<>();
+    private List<CacheableChannel> allCacheableChannels;
+    private List<CacheableChannel> checkedChannel = new ArrayList<>();
     private ToggleButton selectAll;
     private TextView firstLine;
     private TextView secondLine;
@@ -164,8 +165,19 @@ public class OfflineCacheActivity extends Activity {
                     selectAll.setEnabled(true);
                 }
                 else {
-                    secondLine.setText(cacheProgressStatus.getChannelName());
-                    thirdLine.setText(CacheUtilities.getCacheTypeName(cacheProgressStatus.getCacheType()));
+                    switch (cacheProgressStatus.getCacheType()) {
+                        case Digest:
+                            secondLine.setText(cacheProgressStatus.getChannelName());
+                            thirdLine.setText(CacheUtilities.getCacheTypeName(cacheProgressStatus.getCacheType()));
+                            break;
+                        case Image:
+                            secondLine.setText(cacheProgressStatus.getChannelName());
+                            thirdLine.setText(CacheUtilities.getCacheTypeName(cacheProgressStatus.getCacheType()) + " " + cacheProgressStatus.getCurrentIndex()
+                            + "/" + cacheProgressStatus.getTotalCount());
+                            break;
+                        case Detail:
+                            break;
+                    }
                 }
             }
         }
@@ -174,31 +186,31 @@ public class OfflineCacheActivity extends Activity {
     class AllCacheChannelAdapter extends BaseAdapter {
 
         private Context context;
-        private List<Channel> allChannels;
+        private List<CacheableChannel> allChannels;
 
-        public AllCacheChannelAdapter(Context context, List<Channel> allChannels) {
+        public AllCacheChannelAdapter(Context context, List<CacheableChannel> allChannels) {
             this.context = context;
             this.allChannels = allChannels;
-            for(Channel channel : allChannels) {
+            for(CacheableChannel channel : allChannels) {
                 if(PreferenceUtilities.getBooleanValue(CacheSettingPreference, channel.getChannelId())) {
                     checkedChannel.add(channel);
                 }
             }
         }
 
-        public void addCacheChannel(Channel channel) {
+        public void addCacheChannel(CacheableChannel channel) {
             checkedChannel.add(channel);
             PreferenceUtilities.writeToPreference(CacheSettingPreference, channel.getChannelId(), true);
             notifyDataSetChanged();
         }
 
-        public void removeCacheChannel(Channel channel) {
+        public void removeCacheChannel(CacheableChannel channel) {
             checkedChannel.remove(channel);
             PreferenceUtilities.writeToPreference(CacheSettingPreference, channel.getChannelId(), false);
             notifyDataSetChanged();
         }
 
-        public void addAllChannel(List<Channel> channels) {
+        public void addAllChannel(List<CacheableChannel> channels) {
             checkedChannel.addAll(channels);
             for(Channel channel : channels) {
                 PreferenceUtilities.writeToPreference(CacheSettingPreference, channel.getChannelId(), true);
@@ -253,7 +265,7 @@ public class OfflineCacheActivity extends Activity {
     class ChannelListItemClickedListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Channel channel = allCacheableChannels.get(position);
+            CacheableChannel channel = allCacheableChannels.get(position);
             if (checkedChannel.contains(channel)) {
                 allCacheChannelAdapter.removeCacheChannel(channel);
             } else {
@@ -265,9 +277,9 @@ public class OfflineCacheActivity extends Activity {
     class StartStopCacheClickedListener implements View.OnClickListener {
 
         private Context context;
-        private List<Channel> channelsToCache;
+        private List<CacheableChannel> channelsToCache;
 
-        public StartStopCacheClickedListener(List<Channel> channelsToCache, Context context) {
+        public StartStopCacheClickedListener(List<CacheableChannel> channelsToCache, Context context) {
             this.context = context;
             this.channelsToCache = channelsToCache;
         }

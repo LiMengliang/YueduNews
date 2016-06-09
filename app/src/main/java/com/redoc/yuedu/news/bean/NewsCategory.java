@@ -1,6 +1,7 @@
 package com.redoc.yuedu.news.bean;
 
 import com.redoc.yuedu.bean.CacheableCategory;
+import com.redoc.yuedu.bean.CacheableChannel;
 import com.redoc.yuedu.bean.Channel;
 import com.redoc.yuedu.bean.MultiChannelCategory;
 
@@ -18,11 +19,11 @@ public class NewsCategory extends MultiChannelCategory implements CacheableCateg
     }
 
     @Override
-    public ArrayList<Channel> getChannelCacheInfo() {
-        ArrayList<Channel> channels = new ArrayList<Channel>();
+    public ArrayList<CacheableChannel> getChannelCacheInfo() {
+        ArrayList<CacheableChannel> channels = new ArrayList<>();
         for(Channel channel : AllNewsChannels.getAllChannels()) {
-            if(channel.getCacheable()) {
-                channels.add(channel);
+            if(CacheableChannel.class.isInstance(channel)) {
+                channels.add((CacheableChannel)channel);
             }
         }
         return channels;

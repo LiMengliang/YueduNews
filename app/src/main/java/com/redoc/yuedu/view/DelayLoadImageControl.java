@@ -8,4 +8,5 @@ import com.redoc.yuedu.bean.Digest;
 public interface DelayLoadImageControl {
     void clearImages();
     void loadImages(Digest digest);
+    boolean isImageCleared();
 }

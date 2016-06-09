@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,7 +24,7 @@ public class ToolBar extends RelativeLayout {
     private View rootView;
     private TextView titleText;
     private Button rightButton;
-    private ImageButton backButton;
+    private LinearLayout backButton;
 
     public ToolBar(Context context) {
         this(context, null);
@@ -34,7 +35,7 @@ public class ToolBar extends RelativeLayout {
         LayoutInflater.from(context).inflate(R.layout.view_action_bar, this, true);
         titleText = (TextView)findViewById(R.id.toolbar_title);
         rightButton = (Button)findViewById(R.id.toolbar_right_buttom);
-        backButton = (ImageButton)findViewById(R.id.back);
+        backButton = (LinearLayout)findViewById(R.id.titleAndBack);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ToolbarWithButton);
         CharSequence toolbarTitle = a.getText(R.styleable.ToolbarWithButton_toolbar_title);

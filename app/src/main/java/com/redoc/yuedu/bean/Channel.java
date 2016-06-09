@@ -39,9 +39,6 @@ public class Channel implements Comparable, Parcelable {
     }
 
     private String httpLinkFormat;
-    public String getHttpLinkFormat() {
-        return httpLinkFormat;
-    }
     public String getHttpLink(int index) {
         return String.format(httpLinkFormat, index);
     }
@@ -59,18 +56,12 @@ public class Channel implements Comparable, Parcelable {
         return weight;
     }
 
-    private boolean cacheable;
-    public boolean getCacheable() {
-        return cacheable;
-    }
-
-    public Channel(String channelName, String channelId, String httpLinkFormat, int weight, boolean cacheable) {
+    public Channel(String channelName, String channelId, String httpLinkFormat, int weight) {
         this.channelId = channelId;
         this.channelName = channelName;
         this.httpLinkFormat = httpLinkFormat;
         this.selected = false;
         this.weight = weight;
-        this.cacheable = cacheable;
     }
 
     @Override

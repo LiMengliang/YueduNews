@@ -22,9 +22,13 @@ import com.redoc.yuedu.YueduApplication;
 import com.redoc.yuedu.bean.CacheProgressStatus;
 import com.redoc.yuedu.controller.CacheStatus;
 import com.redoc.yuedu.controller.ChannelCache;
+import com.redoc.yuedu.setting.bean.UserSettingCategory;
 import com.redoc.yuedu.utilities.cache.ACacheUtilities;
+import com.redoc.yuedu.utilities.cache.CacheUtilities;
 import com.redoc.yuedu.utilities.network.LoadImageUtilities;
 import com.redoc.yuedu.view.MainActivity;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by limen on 2016/5/12.
@@ -61,23 +65,9 @@ public class UserSettingCategoryFragment extends Fragment {
         if(cachedIcon != null) {
             userIcon.setImageBitmap(cachedIcon);
         }
-
-        ChannelCache.getInstance().AddHandler(new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                if(msg.what == ChannelCache.ProgressMessage) {
-                    Bundle bundle = msg.getData();
-                    CacheProgressStatus cacheProgressStatus = bundle.getParcelable(ChannelCache.ProgressMessageKey);
-                    if(cacheProgressStatus.getCacheStatus() == CacheStatus.NotStarted) {
-                        cacheProgress.setText(YueduApplication.Context.getString(R.string.cache_progress_finished));
-                    }
-                    else {
-                        cacheProgress.setText(String.format(YueduApplication.Context.getString(R.string.cache_progress),
-                                cacheProgressStatus.getChannelName()));
-                    }
-                }
-            }
-        });
+        WeakReference<UserSettingCategoryFragmentHandler> weakHandlerReference =
+                new WeakReference<>(new UserSettingCategoryFragmentHandler(cacheProgress));
+        ChannelCache.getInstance().AddHandler(weakHandlerReference.get());
         return rootView;
     }
 
@@ -87,6 +77,7 @@ public class UserSettingCategoryFragment extends Fragment {
             String selectedPath = data.getExtras().getString(ImageSelectionActivity.selectedIconPath);
             if(!selectedPath.equals("")) {
                 // userIcon.setImageURI(Uri.parse(selectedPath));
+                //userIcon.setImageBitmap(LoadImageUtilities.resizeBitmapToAcceptableSize(LoadImageUtilities.loadBitmapFromUriSync("file://" + selectedPath)));
                 LoadImageUtilities.displayImage("file://"+selectedPath, userIcon);
             }
         }
@@ -111,6 +102,37 @@ public class UserSettingCategoryFragment extends Fragment {
         public void onClick(View v) {
             Intent intent = new Intent(getActivity(), ImageSelectionActivity.class);
             startActivityForResult(intent, UserSettingCategoryFragment.SelectIconRequest);
+        }
+    }
+
+    static class UserSettingCategoryFragmentHandler extends Handler {
+        private TextView cacheProgress;
+
+        public UserSettingCategoryFragmentHandler(TextView cacheProgress) {
+            this.cacheProgress = cacheProgress;
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.what == ChannelCache.ProgressMessage) {
+                Bundle bundle = msg.getData();
+                CacheProgressStatus cacheProgressStatus = bundle.getParcelable(ChannelCache.ProgressMessageKey);
+                if(cacheProgressStatus.getCacheStatus() == CacheStatus.NotStarted) {
+                    cacheProgress.setText(YueduApplication.Context.getString(R.string.cache_progress_finished));
+                }
+                switch (cacheProgressStatus.getCacheType()) {
+                    case Digest:
+                        cacheProgress.setText(YueduApplication.Context.getString(R.string.cache_status_downloading) +
+                                cacheProgressStatus.getChannelName() + CacheUtilities.getCacheTypeName(cacheProgressStatus.getCacheType()));
+                        break;
+                    case Image:
+                        cacheProgress.setText(YueduApplication.Context.getString(R.string.cache_status_downloading) +
+                                cacheProgressStatus.getChannelName() + CacheUtilities.getCacheTypeName(cacheProgressStatus.getCacheType()) + " " +
+                                cacheProgressStatus.getCurrentIndex() + "/" + cacheProgressStatus.getTotalCount());
+                        break;
+                    case Detail:
+                        break;
+                }
+            }
         }
     }
 }

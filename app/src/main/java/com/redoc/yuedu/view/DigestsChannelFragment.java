@@ -8,9 +8,15 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.redoc.yuedu.R;
 import com.redoc.yuedu.bean.Digest;
 import com.redoc.yuedu.controller.DigestsAdapter;
+import com.redoc.yuedu.utilities.network.LoadImageUtilities;
+import com.redoc.yuedu.utilities.network.NetworkUtilities;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DigestsChannelFragment extends ChannelFragment {
 
@@ -19,6 +25,8 @@ public class DigestsChannelFragment extends ChannelFragment {
     private int lastFirstVisiblePosition = 0;
     private boolean canFetchLatestNews = true;
     private final static String lastVisiblePosition = "VisiblePosition";
+    private int firstPositionWithImage = Integer.MAX_VALUE;
+    private int lastPositionWithImages = Integer.MIN_VALUE;
 
     /**
      * Use this factory method to create a new instance of
@@ -51,6 +59,7 @@ public class DigestsChannelFragment extends ChannelFragment {
         mDigestsList.addFooterView(listFooter);
         mDigestsList.setAdapter(digestsAdapter);
         mDigestsList.setOnScrollListener(new DigestListOnScrollListener());
+        // mDigestsList.setOnScrollListener(new PauseOnScrollListener(LoadImageUtilities.imageLoader, true, true));
         if(shouldRefreshChannel()) {
             digestsAdapter.fetchLatest();
         }
@@ -75,8 +84,8 @@ public class DigestsChannelFragment extends ChannelFragment {
             mDigestsList.setSelection(0);
             mDigestsList.smoothScrollToPosition(0);
             digestsAdapter.fetchLatest();
-            Toast toast = Toast.makeText(getContext(), "获取最新新闻", Toast.LENGTH_SHORT);
-            toast.show();
+            // Toast toast = Toast.makeText(getContext(), "获取最新新闻", Toast.LENGTH_SHORT);
+            // toast.show();
         }
     }
 
@@ -95,10 +104,14 @@ public class DigestsChannelFragment extends ChannelFragment {
                 for(int i = 0; i <= lastVisiblePosition - firstVisiblePosition; i++ ) {
                     View digestRootView = mDigestsList.getChildAt(i);
                     DelayLoadImageControl delayLoadImageControl = (DelayLoadImageControl)digestRootView.getTag();
-                    if(delayLoadImageControl != null) {
-                        delayLoadImageControl.loadImages((Digest) digestsAdapter.getItem(i + firstVisiblePosition));
+                    if(delayLoadImageControl != null && delayLoadImageControl.isImageCleared()) {
+                        if(firstPositionWithImage > i + firstVisiblePosition || lastPositionWithImages < i + firstVisiblePosition) {
+                            delayLoadImageControl.loadImages((Digest) digestsAdapter.getItem(i + firstVisiblePosition));
+                        }
                     }
                 }
+                firstPositionWithImage = firstVisiblePosition;
+                lastPositionWithImages = lastVisiblePosition;
             }
             else {
                 canFetchLatestNews = false;

@@ -6,9 +6,9 @@ package com.redoc.yuedu.bean;
 public class CacheTask {
     private CacheType cacheType;
     private int totalCount;
-    private int currentIndex;
-    private Channel channel;
+    private CacheableChannel channel;
     private boolean executed;
+    private String httpLink;
 
     public CacheType getCacheType() {
         return cacheType;
@@ -26,23 +26,22 @@ public class CacheTask {
         this.totalCount = totalCount;
     }
 
-    public Channel getChannel() {
+    public CacheableChannel getChannel() {
         return channel;
     }
 
-    public void setCurrentChannel(Channel channel) {
+    public String getHttpLink() {
+        return httpLink;
+    }
+
+    public void setCurrentChannel(CacheableChannel channel) {
         this.channel = channel;
     }
 
-    public int getCurrentIndex() {
-        return currentIndex;
-    }
-
-    public CacheTask(Channel channel, CacheType cacheType, int currentIndex, int totalCount) {
+    public CacheTask(String httpLink, CacheableChannel channel, CacheType cacheType) {
+        this.httpLink = httpLink;
         this.cacheType = cacheType;
         this.channel = channel;
-        this.currentIndex = currentIndex;
-        this.totalCount = totalCount;
     }
 
     public boolean isExecuted() {

@@ -3,7 +3,6 @@ package com.redoc.yuedu.setting.view;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -12,16 +11,12 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageButton;
-import android.widget.Toolbar;
 
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.redoc.yuedu.R;
 import com.redoc.yuedu.setting.controller.AlbumnImagesAdapter;
 import com.redoc.yuedu.utilities.cache.ACacheUtilities;
-import com.redoc.yuedu.utilities.cache.CacheUtilities;
 import com.redoc.yuedu.utilities.network.LoadImageUtilities;
 import com.redoc.yuedu.view.widget.ToolBar;
 
@@ -64,7 +59,8 @@ public class ImageSelectionActivity extends Activity {
             @Override
             public void onClick(View v) {
                 setResult(RESULT_OK, getIntent());
-                Bitmap bitmap = LoadImageUtilities.loadBitmapFromUriAsync("file://"+selectedPath);
+                Bitmap bitmap = LoadImageUtilities.resizeBitmapToAcceptableSize(
+                        LoadImageUtilities.loadBitmapFromUriSync("file://" + selectedPath));
                 ACacheUtilities.setCacheImage(context, usreIconCacheKey, bitmap);
                 finish();
             }
