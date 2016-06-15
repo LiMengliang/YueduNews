@@ -7,7 +7,6 @@ import com.redoc.yuedu.bean.Category;
  */
 public class UserSettingCategory extends Category {
     public UserSettingCategory(String categoryName, int categoryIconResoruceId) {
-        super.setCategoryName(categoryName);
-        super.setCategoryIconResourceId(categoryIconResoruceId);
+        super(categoryName, categoryIconResoruceId);
     }
 }

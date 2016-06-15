@@ -3,10 +3,7 @@ package com.redoc.yuedu.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.redoc.yuedu.R;
-import com.redoc.yuedu.YueduApplication;
 import com.redoc.yuedu.controller.CacheStatus;
-import com.redoc.yuedu.controller.ChannelCache;
 import com.redoc.yuedu.utilities.preference.PreferenceUtilities;
 
 /**

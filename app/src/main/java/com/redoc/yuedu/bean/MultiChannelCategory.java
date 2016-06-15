@@ -7,7 +7,6 @@ import java.util.ArrayList;
  */
 public class MultiChannelCategory extends Category {
     public MultiChannelCategory(String categoryName, int categoryIconResoruceId) {
-        super.setCategoryName(categoryName);
-        super.setCategoryIconResourceId(categoryIconResoruceId);
+        super(categoryName, categoryIconResoruceId);
     }
 }

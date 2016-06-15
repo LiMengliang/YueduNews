@@ -5,22 +5,17 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.redoc.yuedu.bean.CacheProgressStatus;
 import com.redoc.yuedu.bean.CacheTask;
 import com.redoc.yuedu.bean.CacheType;
 import com.redoc.yuedu.bean.CacheableChannel;
-import com.redoc.yuedu.bean.Channel;
-import com.redoc.yuedu.setting.view.OfflineCacheActivity;
-import com.redoc.yuedu.utilities.cache.ACache;
 import com.redoc.yuedu.utilities.cache.ACacheUtilities;
 import com.redoc.yuedu.utilities.network.LoadImageUtilities;
 import com.redoc.yuedu.utilities.network.VolleyUtilities;
@@ -36,10 +31,11 @@ import java.util.List;
  * Created by limen on 2016/5/15.
  */
 
-public class ChannelCache {
+// TODO: Seperate into background worker and progress notifier
+public class ChannelLocalCacheWorker {
 
     private static int maxDigestsToCache = 100;
-    private static ChannelCache channelCacheInstance;
+    private static ChannelLocalCacheWorker channelCacheInstance;
     private List<Handler> progressHandlers;
     private List<CacheTask> cacheTasks;
     private int currentExecutingTaskIndex;
@@ -50,9 +46,9 @@ public class ChannelCache {
     public final static int ProgressMessage = 0x1200;
     public final static String ProgressMessageKey = "CACHE_PROGRESS";
 
-    public static ChannelCache getInstance() {
+    public static ChannelLocalCacheWorker getInstance() {
         if(channelCacheInstance == null) {
-            channelCacheInstance = new ChannelCache();
+            channelCacheInstance = new ChannelLocalCacheWorker();
         }
         return channelCacheInstance;
     }
@@ -61,7 +57,7 @@ public class ChannelCache {
         return status;
     }
 
-    public ChannelCache() {
+    public ChannelLocalCacheWorker() {
         progressHandlers = new ArrayList<>();
     }
 
@@ -73,13 +69,6 @@ public class ChannelCache {
     public void AddHandler(Handler handler) {
         progressHandlers.add(handler);
     }
-
-    // public String getChannelCacheKey(Channel channel, int index, boolean userCache) {
-    //     if(userCache) {
-    //         return channel.getHttpLink(index) + "ACache";
-    //     }
-    //     return channel.getChannelId();
-    // }
 
     public static String getChannelCacheKey(String httpLink, boolean userCache) {
         if(userCache) {

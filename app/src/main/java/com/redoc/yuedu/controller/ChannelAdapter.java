@@ -15,16 +15,16 @@ import java.util.List;
  * Created by limen on 2016/4/30.
  */
 public class ChannelAdapter<T extends Channel> extends FragmentStatePagerAdapter {
-    // private List<? extends Channel> channels;
     private ChannelsManager channelsManager;
 
+    // TODO: Channel manager should have a channel adapter, instead of channel adapter have a channel manager.
     public ChannelAdapter(FragmentManager fragmentManager, ChannelsManager channelsManager) {
         super(fragmentManager);
         this.channelsManager = channelsManager;
-        // this.channels = channelsManager.getSortedUserSelectedChannels();
     }
 
-    public void addChannel(Channel channel) {//, NewsDigestsManager newsDigestsManager) {
+    // TODO: ChannelManager should have a addChannel method.
+    public void addChannel(Channel channel) {
         channelsManager.addUserSelectedChannel(channel);
         notifyDataSetChanged();
     }
@@ -51,6 +51,7 @@ public class ChannelAdapter<T extends Channel> extends FragmentStatePagerAdapter
         return channelsManager.getSortedUserSelectedChannels().size();
     }
 
+    // TODO: useless override
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         Fragment obj = (Fragment)super.instantiateItem(container, position);

@@ -8,15 +8,14 @@ public abstract class Category {
     public String getCategoryName() {
         return categoryName;
     }
-    protected void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
 
     private int categoryIconResourceId;
     public int getCategoryIconResourceId() {
         return categoryIconResourceId;
     }
-    protected void setCategoryIconResourceId(int id) {
-        categoryIconResourceId = id;
+
+    protected Category(String categoryName, int categoryIconResourceId) {
+        this.categoryName = categoryName;
+        this.categoryIconResourceId = categoryIconResourceId;
     }
 }

@@ -5,7 +5,6 @@ package com.redoc.yuedu.bean;
  */
 public class SingleChannelCategory extends Category {
     public SingleChannelCategory(String categoryName, int categoryIconResoruceId) {
-        super.setCategoryName(categoryName);
-        super.setCategoryIconResourceId(categoryIconResoruceId);
+        super(categoryName, categoryIconResoruceId);
     }
 }

@@ -5,7 +5,6 @@ import android.content.Context;
 import com.redoc.yuedu.bean.Channel;
 import com.redoc.yuedu.utilities.cache.ACacheUtilities;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -26,7 +25,7 @@ public class CacheDigestProvider implements DigestsProvider {
     @Override
     public void fetchLatest(Channel channel, Context context, DigestsAdapter digestsAdapter) {
         String httpLink = channel.getHttpLink(0);
-        String cacheKey = ChannelCache.getInstance().getChannelCacheKey(httpLink, true);
+        String cacheKey = ChannelLocalCacheWorker.getInstance().getChannelCacheKey(httpLink, true);
         String jsonValue = ACacheUtilities.getCacheStr(context, cacheKey);
         if(jsonValue != null) {
             try {
@@ -41,7 +40,7 @@ public class CacheDigestProvider implements DigestsProvider {
     @Override
     public void fetchMore(Channel channel, int index, Context context, DigestsAdapter digestsAdapter) {
         String httpLink = channel.getHttpLink(index);
-        String cacheKey = ChannelCache.getInstance().getChannelCacheKey(httpLink, true);
+        String cacheKey = ChannelLocalCacheWorker.getInstance().getChannelCacheKey(httpLink, true);
         String jsonValue = ACacheUtilities.getCacheStr(context, cacheKey);
         if(jsonValue != null) {
             JSONTokener jsonParser = new JSONTokener(jsonValue);

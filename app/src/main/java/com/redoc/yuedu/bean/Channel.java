@@ -52,9 +52,6 @@ public class Channel implements Comparable, Parcelable {
     }
 
     private int weight;
-    public int getWeight() {
-        return weight;
-    }
 
     public Channel(String channelName, String channelId, String httpLinkFormat, int weight) {
         this.channelId = channelId;

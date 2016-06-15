@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,16 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.redoc.yuedu.R;
 import com.redoc.yuedu.YueduApplication;
 import com.redoc.yuedu.bean.CacheProgressStatus;
 import com.redoc.yuedu.controller.CacheStatus;
-import com.redoc.yuedu.controller.ChannelCache;
-import com.redoc.yuedu.setting.bean.UserSettingCategory;
+import com.redoc.yuedu.controller.ChannelLocalCacheWorker;
 import com.redoc.yuedu.utilities.cache.ACacheUtilities;
 import com.redoc.yuedu.utilities.cache.CacheUtilities;
 import com.redoc.yuedu.utilities.network.LoadImageUtilities;
@@ -67,7 +63,7 @@ public class UserSettingCategoryFragment extends Fragment {
         }
         WeakReference<UserSettingCategoryFragmentHandler> weakHandlerReference =
                 new WeakReference<>(new UserSettingCategoryFragmentHandler(cacheProgress));
-        ChannelCache.getInstance().AddHandler(weakHandlerReference.get());
+        ChannelLocalCacheWorker.getInstance().AddHandler(weakHandlerReference.get());
         return rootView;
     }
 
@@ -113,9 +109,9 @@ public class UserSettingCategoryFragment extends Fragment {
         }
         @Override
         public void handleMessage(Message msg) {
-            if(msg.what == ChannelCache.ProgressMessage) {
+            if(msg.what == ChannelLocalCacheWorker.ProgressMessage) {
                 Bundle bundle = msg.getData();
-                CacheProgressStatus cacheProgressStatus = bundle.getParcelable(ChannelCache.ProgressMessageKey);
+                CacheProgressStatus cacheProgressStatus = bundle.getParcelable(ChannelLocalCacheWorker.ProgressMessageKey);
                 if(cacheProgressStatus.getCacheStatus() == CacheStatus.NotStarted) {
                     cacheProgress.setText(YueduApplication.Context.getString(R.string.cache_progress_finished));
                 }

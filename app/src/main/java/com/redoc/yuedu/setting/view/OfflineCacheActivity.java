@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -18,11 +17,10 @@ import android.widget.ToggleButton;
 import com.redoc.yuedu.R;
 import com.redoc.yuedu.YueduApplication;
 import com.redoc.yuedu.bean.CacheProgressStatus;
-import com.redoc.yuedu.bean.CacheType;
 import com.redoc.yuedu.bean.CacheableChannel;
 import com.redoc.yuedu.bean.Channel;
 import com.redoc.yuedu.controller.CacheStatus;
-import com.redoc.yuedu.controller.ChannelCache;
+import com.redoc.yuedu.controller.ChannelLocalCacheWorker;
 import com.redoc.yuedu.utilities.cache.CacheUtilities;
 import com.redoc.yuedu.utilities.preference.PreferenceUtilities;
 import com.redoc.yuedu.view.widget.ToolBar;
@@ -77,7 +75,7 @@ public class OfflineCacheActivity extends Activity {
         WeakReference<CacheProgressHandler> weakCacheProgressHandlerReference =
                 new WeakReference<>(new CacheProgressHandler(firstLine,
                         secondLine, thirdLine, startStopCache, selectAll, this));
-        ChannelCache.getInstance().AddHandler(weakCacheProgressHandlerReference.get());
+        ChannelLocalCacheWorker.getInstance().AddHandler(weakCacheProgressHandlerReference.get());
         initializeDisplayer();
     }
 
@@ -153,9 +151,9 @@ public class OfflineCacheActivity extends Activity {
 
         @Override
         public void handleMessage(Message msg) {
-            if(msg.what == ChannelCache.ProgressMessage) {
+            if(msg.what == ChannelLocalCacheWorker.ProgressMessage) {
                 Bundle bundle = msg.getData();
-                CacheProgressStatus cacheProgressStatus = bundle.getParcelable(ChannelCache.ProgressMessageKey);
+                CacheProgressStatus cacheProgressStatus = bundle.getParcelable(ChannelLocalCacheWorker.ProgressMessageKey);
                 activity.setCacheProgressStatus(cacheProgressStatus);
                 if(cacheProgressStatus.getCacheStatus() == CacheStatus.NotStarted) {
                     firstLine.setText("");
@@ -286,17 +284,17 @@ public class OfflineCacheActivity extends Activity {
 
         @Override
         public void onClick(View v) {
-            if (ChannelCache.getInstance().getStatus() == CacheStatus.NotStarted) {
-                ChannelCache.getInstance().startCache(channelsToCache, context);
+            if (ChannelLocalCacheWorker.getInstance().getStatus() == CacheStatus.NotStarted) {
+                ChannelLocalCacheWorker.getInstance().startCache(channelsToCache, context);
                 firstLine.setText(YueduApplication.Context.getString(R.string.cache_status_downloading));
                 selectAll.setEnabled(false);
             }
-            else if(ChannelCache.getInstance().getStatus() == CacheStatus.InProgress) {
-                ChannelCache.getInstance().pause();
+            else if(ChannelLocalCacheWorker.getInstance().getStatus() == CacheStatus.InProgress) {
+                ChannelLocalCacheWorker.getInstance().pause();
                 firstLine.setText(YueduApplication.Context.getString(R.string.cache_status_paused));
             }
-            else if(ChannelCache.getInstance().getStatus() == CacheStatus.Paused) {
-                ChannelCache.getInstance().resume();
+            else if(ChannelLocalCacheWorker.getInstance().getStatus() == CacheStatus.Paused) {
+                ChannelLocalCacheWorker.getInstance().resume();
                 firstLine.setText(YueduApplication.Context.getString(R.string.cache_status_downloading));
             }
         }

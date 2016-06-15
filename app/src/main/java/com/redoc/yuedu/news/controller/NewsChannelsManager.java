@@ -31,7 +31,7 @@ public class NewsChannelsManager extends ChannelsManager {
     public static String SelectedChannelsPreferenceKey = "SelectedChannelsKey";
     public static String SelectedChannelsPreferenceFileName = "SelectedChannelsPreferenceFile";
 
-    private Map<Channel, DigestsAdapter> channelAndDigestsAdapterMap = new HashMap<Channel, DigestsAdapter>();
+    private Map<Channel, DigestsAdapter> channelAndDigestsAdapterMap = new HashMap<>();
 
     private List<NewsChannel> userSelectedChannels;
     public NewsChannelsManager(Context context) {
@@ -63,7 +63,7 @@ public class NewsChannelsManager extends ChannelsManager {
                 add(AllNewsChannels.sociaty);
             }
         };
-        userSelectedChannels = new ArrayList<NewsChannel>();
+        userSelectedChannels = new ArrayList<>();
         if(PreferenceUtilities.containsKey(SelectedChannelsPreferenceFileName, SelectedChannelsPreferenceKey)) {
             Set<String> selectedChannelsId = PreferenceUtilities.getStringSetValue(SelectedChannelsPreferenceFileName, SelectedChannelsPreferenceKey);
             for(NewsChannel channel : allChannels) {

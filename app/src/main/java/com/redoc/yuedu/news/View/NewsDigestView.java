@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.redoc.yuedu.R;
 import com.redoc.yuedu.bean.Digest;
-import com.redoc.yuedu.controller.ChannelCache;
+import com.redoc.yuedu.controller.ChannelLocalCacheWorker;
 import com.redoc.yuedu.news.bean.NewsDigest;
 import com.redoc.yuedu.utilities.cache.ACacheUtilities;
 import com.redoc.yuedu.utilities.network.LoadImageUtilities;
@@ -131,9 +131,7 @@ public class NewsDigestView implements DelayLoadImageControl {
                         LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(0), singleImageDigestImage);
                     }else {
                         singleImageDigestImage.setImageBitmap(LoadImageUtilities.resizeBitmapToAcceptableSize(ACacheUtilities.getCacheImage(context,
-                                ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(0), true))));
-                        // singleImageDigestImage.setImageBitmap(ACacheUtilities.getCacheImage(context,
-                        //         ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(0), true)));
+                                ChannelLocalCacheWorker.getChannelCacheKey(newsDigest.getDigestImages().get(0), true))));
                     }
                     break;
                 }
@@ -144,17 +142,11 @@ public class NewsDigestView implements DelayLoadImageControl {
                         LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(2), multiImageDigestImageC);
                     }else {
                         multiImageDigestImageA.setImageBitmap(LoadImageUtilities.resizeBitmapToAcceptableSize(ACacheUtilities.getCacheImage(context,
-                                ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(0), true))));
+                                ChannelLocalCacheWorker.getChannelCacheKey(newsDigest.getDigestImages().get(0), true))));
                         multiImageDigestImageB.setImageBitmap(LoadImageUtilities.resizeBitmapToAcceptableSize(ACacheUtilities.getCacheImage(context,
-                                ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(1), true))));
+                                ChannelLocalCacheWorker.getChannelCacheKey(newsDigest.getDigestImages().get(1), true))));
                         multiImageDigestImageC.setImageBitmap(LoadImageUtilities.resizeBitmapToAcceptableSize(ACacheUtilities.getCacheImage(context,
-                                ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(2), true))));
-                        // multiImageDigestImageA.setImageBitmap(ACacheUtilities.getCacheImage(context,
-                        //         ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(0), true)));
-                        // multiImageDigestImageB.setImageBitmap(ACacheUtilities.getCacheImage(context,
-                        //         ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(1), true)));
-                        // multiImageDigestImageC.setImageBitmap(ACacheUtilities.getCacheImage(context,
-                        //         ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(2), true)));
+                                ChannelLocalCacheWorker.getChannelCacheKey(newsDigest.getDigestImages().get(2), true))));
                     }
                     break;
                 }
@@ -165,17 +157,11 @@ public class NewsDigestView implements DelayLoadImageControl {
                         LoadImageUtilities.displayImage(newsDigest.getDigestImages().get(2), photoSetDigestImageB);
                     }else {
                         photoSetDigestMainImage.setImageBitmap(LoadImageUtilities.resizeBitmapToAcceptableSize(ACacheUtilities.getCacheImage(context,
-                                ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(1), true))));
+                                ChannelLocalCacheWorker.getChannelCacheKey(newsDigest.getDigestImages().get(1), true))));
                         photoSetDigestImageA.setImageBitmap(LoadImageUtilities.resizeBitmapToAcceptableSize(ACacheUtilities.getCacheImage(context,
-                                ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(0), true))));
+                                ChannelLocalCacheWorker.getChannelCacheKey(newsDigest.getDigestImages().get(0), true))));
                         photoSetDigestImageB.setImageBitmap(LoadImageUtilities.resizeBitmapToAcceptableSize(ACacheUtilities.getCacheImage(context,
-                                ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(2), true))));
-                        // photoSetDigestMainImage.setImageBitmap(ACacheUtilities.getCacheImage(context,
-                        //         ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(1), true)));
-                        // photoSetDigestImageA.setImageBitmap(ACacheUtilities.getCacheImage(context,
-                        //         ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(0), true)));
-                        // photoSetDigestImageB.setImageBitmap(ACacheUtilities.getCacheImage(context,
-                        //         ChannelCache.getChannelCacheKey(newsDigest.getDigestImages().get(2), true)));
+                                ChannelLocalCacheWorker.getChannelCacheKey(newsDigest.getDigestImages().get(2), true))));
                     }
                     break;
                 }
