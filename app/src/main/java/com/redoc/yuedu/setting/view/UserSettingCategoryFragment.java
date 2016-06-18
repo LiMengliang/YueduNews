@@ -113,7 +113,8 @@ public class UserSettingCategoryFragment extends Fragment {
                 Bundle bundle = msg.getData();
                 CacheProgressStatus cacheProgressStatus = bundle.getParcelable(ChannelLocalCacheWorker.ProgressMessageKey);
                 if(cacheProgressStatus.getCacheStatus() == CacheStatus.NotStarted) {
-                    cacheProgress.setText(YueduApplication.Context.getString(R.string.cache_progress_finished));
+                    cacheProgress.setText("");
+                    return;
                 }
                 switch (cacheProgressStatus.getCacheType()) {
                     case Digest:

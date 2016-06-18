@@ -2,7 +2,7 @@
     <!--general-->
     <dimen name="large_size_text">16dp</dimen>
     <dimen name="media_size_text">14dp</dimen>
-    <dimen name="small_size_text">12dp</dimen>
+    <dimen name="small_size_text">10dp</dimen>
     <dimen name="button_height">18dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>

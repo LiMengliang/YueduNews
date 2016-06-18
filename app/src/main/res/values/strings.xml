@@ -46,6 +46,7 @@
     <string name="select_all_text_on">取消全选</string>
     <string name="select_all_text_off">全部选择</string>
     <string name="cache_progress_last_cache_time">上次缓存</string>
+    <string name="cache_clear">清空缓存</string>
     <string name="title_activity_main2">Main2Activity</string>
 
     <!--Icon image selector view-->

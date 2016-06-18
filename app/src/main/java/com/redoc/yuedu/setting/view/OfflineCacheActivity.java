@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -34,22 +35,21 @@ public class OfflineCacheActivity extends Activity {
 
     private List<CacheableChannel> allCacheableChannels;
     private List<CacheableChannel> checkedChannel = new ArrayList<>();
-    private ToggleButton selectAll;
+    private Button clearCache;
     private TextView firstLine;
     private TextView secondLine;
     private TextView thirdLine;
     private AllCacheChannelAdapter allCacheChannelAdapter;
-    private CacheProgressStatus cacheProgressStatus = null;
     private ToolBar toolBar;
 
     public final static String CacheSettingPreference = "CacheSettingPreference";
 
-    public void setCacheProgressStatus(CacheProgressStatus status) {
-        cacheProgressStatus = status;
-    }
-    public CacheProgressStatus getCacheProgressStatus() {
-        return cacheProgressStatus;
-    }
+    // public void setCacheProgressStatus(CacheProgressStatus status) {
+    //     cacheProgressStatus = status;
+    // }
+    // public CacheProgressStatus getCacheProgressStatus() {
+    //     return cacheProgressStatus;
+    // }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class OfflineCacheActivity extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         ListView allChannelsList = (ListView) findViewById(R.id.all_channels);
         ToggleButton startStopCache = (ToggleButton) findViewById(R.id.startStopCache);
-        selectAll = (ToggleButton) findViewById(R.id.select_all);
+        clearCache = (Button) findViewById(R.id.select_all);
         firstLine = (TextView) findViewById(R.id.cache_progress_line_one);
         secondLine = (TextView) findViewById(R.id.cache_progress_line_two);
         thirdLine = (TextView) findViewById(R.id.cache_progress_line_three);
@@ -69,12 +69,12 @@ public class OfflineCacheActivity extends Activity {
         allCacheChannelAdapter = new AllCacheChannelAdapter(this, allCacheableChannels);
         allChannelsList.setAdapter(allCacheChannelAdapter);
         allChannelsList.setOnItemClickListener(new ChannelListItemClickedListener());
-        selectAll.setOnClickListener(new SelectAllClickedListener());
+        clearCache.setOnClickListener(new ClearCacheListener());
         toolBar.setBackClickListener(new BackClickedListener());
 
         WeakReference<CacheProgressHandler> weakCacheProgressHandlerReference =
                 new WeakReference<>(new CacheProgressHandler(firstLine,
-                        secondLine, thirdLine, startStopCache, selectAll, this));
+                        secondLine, thirdLine, startStopCache, clearCache, this));
         ChannelLocalCacheWorker.getInstance().AddHandler(weakCacheProgressHandlerReference.get());
         initializeDisplayer();
     }
@@ -82,13 +82,14 @@ public class OfflineCacheActivity extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-        if(cacheProgressStatus != null) {
-            cacheProgressStatus.writeToPreferences();
+        if(ChannelLocalCacheWorker.getInstance().getCacheProgressStatus() != null) {
+            ChannelLocalCacheWorker.getInstance().getCacheProgressStatus().writeToPreferences();
         }
     }
 
     public void initializeDisplayer() {
-        CacheProgressStatus status = CacheProgressStatus.getFromPreferences();
+        // CacheProgressStatus status = CacheProgressStatus.getFromPreferences();
+        CacheProgressStatus status = ChannelLocalCacheWorker.getInstance().getCacheProgressStatus();
         switch (status.getCacheStatus()) {
             case NotStarted:
                 if(status.getLastCacheTime() == 0) {
@@ -136,16 +137,16 @@ public class OfflineCacheActivity extends Activity {
         private TextView secondLine;
         private TextView thirdLine;
         private ToggleButton startStopCache;
-        private ToggleButton selectAll;
+        private Button clearCache;
         private OfflineCacheActivity activity;
 
-        CacheProgressHandler(TextView firstLine, TextView secondLine, TextView thirdLine, ToggleButton startStopCache, ToggleButton selectAll,
+        CacheProgressHandler(TextView firstLine, TextView secondLine, TextView thirdLine, ToggleButton startStopCache, Button clearCache,
                              OfflineCacheActivity activity) {
             this.firstLine = firstLine;
             this.secondLine = secondLine;
             this.thirdLine = thirdLine;
             this.startStopCache = startStopCache;
-            this.selectAll = selectAll;
+            this.clearCache = clearCache;
             this.activity = activity;
         }
 
@@ -153,14 +154,14 @@ public class OfflineCacheActivity extends Activity {
         public void handleMessage(Message msg) {
             if(msg.what == ChannelLocalCacheWorker.ProgressMessage) {
                 Bundle bundle = msg.getData();
-                CacheProgressStatus cacheProgressStatus = bundle.getParcelable(ChannelLocalCacheWorker.ProgressMessageKey);
-                activity.setCacheProgressStatus(cacheProgressStatus);
+                // CacheProgressStatus cacheProgressStatus = bundle.getParcelable(ChannelLocalCacheWorker.ProgressMessageKey);
+                CacheProgressStatus cacheProgressStatus = ChannelLocalCacheWorker.getInstance().getCacheProgressStatus();
                 if(cacheProgressStatus.getCacheStatus() == CacheStatus.NotStarted) {
                     firstLine.setText("");
                     secondLine.setText(YueduApplication.Context.getString(R.string.cache_progress_finished));
                     thirdLine.setText("");
                     startStopCache.setChecked(false);
-                    selectAll.setEnabled(true);
+                    clearCache.setEnabled(true);
                 }
                 else {
                     switch (cacheProgressStatus.getCacheType()) {
@@ -205,19 +206,6 @@ public class OfflineCacheActivity extends Activity {
         public void removeCacheChannel(CacheableChannel channel) {
             checkedChannel.remove(channel);
             PreferenceUtilities.writeToPreference(CacheSettingPreference, channel.getChannelId(), false);
-            notifyDataSetChanged();
-        }
-
-        public void addAllChannel(List<CacheableChannel> channels) {
-            checkedChannel.addAll(channels);
-            for(Channel channel : channels) {
-                PreferenceUtilities.writeToPreference(CacheSettingPreference, channel.getChannelId(), true);
-            }
-            notifyDataSetChanged();
-        }
-
-        public void removeAllCachedChannels() {
-            checkedChannel.clear();
             notifyDataSetChanged();
         }
 
@@ -284,10 +272,10 @@ public class OfflineCacheActivity extends Activity {
 
         @Override
         public void onClick(View v) {
+            clearCache.setEnabled(false);
             if (ChannelLocalCacheWorker.getInstance().getStatus() == CacheStatus.NotStarted) {
                 ChannelLocalCacheWorker.getInstance().startCache(channelsToCache, context);
                 firstLine.setText(YueduApplication.Context.getString(R.string.cache_status_downloading));
-                selectAll.setEnabled(false);
             }
             else if(ChannelLocalCacheWorker.getInstance().getStatus() == CacheStatus.InProgress) {
                 ChannelLocalCacheWorker.getInstance().pause();
@@ -300,17 +288,13 @@ public class OfflineCacheActivity extends Activity {
         }
     }
 
-    class SelectAllClickedListener implements View.OnClickListener {
+    class ClearCacheListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            if(selectAll.isChecked()) {
-                checkedChannel.clear();
-                allCacheChannelAdapter.addAllChannel(allCacheableChannels);
-            }
-            else{
-                allCacheChannelAdapter.removeAllCachedChannels();
-            }
+            firstLine.setText("");
+            secondLine.setText("没有缓存");
+            thirdLine.setText("");
         }
     }
 }

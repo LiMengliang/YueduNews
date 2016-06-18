@@ -25,13 +25,13 @@ public class SplashActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_splash);
-        splashImage = findViewById(R.id.splashImage);
-        splashImage.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        // splashImage = findViewById(R.id.splashImage);
+        // splashImage.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+        //         | View.SYSTEM_UI_FLAG_FULLSCREEN
+        //         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        //         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        //         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        //         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         mStartButton = findViewById(R.id.startButton);
         mSplashIcon = findViewById(R.id.splashIconImage);
 
@@ -44,6 +44,7 @@ public class SplashActivity extends AppCompatActivity
                 Intent intent = new Intent();
                 intent.setComponent(componentName);
                 startActivity(intent);
+                finish();
             }
         });
         AnimationUtilities.startAlphaAnim(mStartButton, 0, 1, 1000);

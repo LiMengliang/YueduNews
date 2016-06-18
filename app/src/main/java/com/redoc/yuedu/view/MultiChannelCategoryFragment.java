@@ -159,16 +159,18 @@ public class MultiChannelCategoryFragment extends Fragment implements Refreshabl
         params.gravity = Gravity.CENTER_VERTICAL;
         // TODO:Maybe channel selector can also bind to an adapter
         int index = 0;
-        for(final Channel channel : channelManager.getSortedUserSelectedChannels()) {
-            // Add channel name to selector
-            TextView textView = new TextView(mActivity);
-            textView.setText(channel.getChannelName());
-            textView.setTextSize(15);
-            textView.setOnClickListener(new ChannelNameClickListener(channel, index));
-            mChannelSelectors.addView(textView, index++, params);
+        if(channelManager != null) {
+            for(final Channel channel : channelManager.getSortedUserSelectedChannels()) {
+                // Add channel name to selector
+                TextView textView = new TextView(mActivity);
+                textView.setText(channel.getChannelName());
+                textView.setTextSize(15);
+                textView.setOnClickListener(new ChannelNameClickListener(channel, index));
+                mChannelSelectors.addView(textView, index++, params);
+            }
+            // set selected channel, in this method, we'll also update news digests.s
+            updateChannelSelectorBar(getCurrentSelectedChannel());
         }
-        // set selected channel, in this method, we'll also update news digests.s
-        updateChannelSelectorBar(getCurrentSelectedChannel());
     }
 
     // TODO: TextView should be modualized

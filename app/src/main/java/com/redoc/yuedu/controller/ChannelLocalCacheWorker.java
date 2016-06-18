@@ -33,7 +33,6 @@ import java.util.List;
 
 // TODO: Seperate into background worker and progress notifier
 public class ChannelLocalCacheWorker {
-
     private static int maxDigestsToCache = 100;
     private static ChannelLocalCacheWorker channelCacheInstance;
     private List<Handler> progressHandlers;
@@ -42,6 +41,7 @@ public class ChannelLocalCacheWorker {
     private Context context;
     private CacheStatus status = CacheStatus.NotStarted;
     private long lastCacheTime = PreferenceUtilities.getLongValue(CacheProgressStatus.CacheStatusPreference, CacheProgressStatus.LastCacheTimeKey);
+    private CacheProgressStatus cacheProgressStatus = null;
 
     public final static int ProgressMessage = 0x1200;
     public final static String ProgressMessageKey = "CACHE_PROGRESS";
@@ -58,9 +58,17 @@ public class ChannelLocalCacheWorker {
     }
 
     public ChannelLocalCacheWorker() {
+        cacheProgressStatus = CacheProgressStatus.getFromPreferences();
         progressHandlers = new ArrayList<>();
     }
 
+    public CacheProgressStatus getCacheProgressStatus() {
+        return cacheProgressStatus;
+    }
+
+    // public void setCacheProgressStatus(CacheProgressStatus progressStatus) {
+    //     cacheProgressStatus = progressStatus;
+    // }
 
     public long getLastCacheTime() {
         return lastCacheTime;
@@ -87,6 +95,7 @@ public class ChannelLocalCacheWorker {
 
     public void pause() {
         status = CacheStatus.Paused;
+        cacheProgressStatus.writeToPreferences();
     }
 
     public void resume() {
@@ -113,13 +122,15 @@ public class ChannelLocalCacheWorker {
                 return;
             }
         }
+        cacheProgressStatus = new CacheProgressStatus("", CacheType.Digest, maxDigestsToCache, 0,
+                CacheStatus.NotStarted, new Date().getTime());
+        cacheProgressStatus.writeToPreferences();
         // Finish all tasks, Send cache status by handlers
         for(Handler handler : progressHandlers) {
             Message message = new Message();
             message.what = ProgressMessage;
             Bundle bundle = new Bundle();
-            bundle.putParcelable(ProgressMessageKey, new CacheProgressStatus(
-                    "", CacheType.Digest, maxDigestsToCache, 0, CacheStatus.NotStarted, new Date().getTime()));
+            bundle.putParcelable(ProgressMessageKey, cacheProgressStatus);
             message.setData(bundle);
             handler.sendMessage(message);
         }
@@ -166,18 +177,18 @@ public class ChannelLocalCacheWorker {
             case Detail:
                 break;
         }
+        cacheProgressStatus = new CacheProgressStatus(cacheTask.getChannel().getChannelName(), cacheTask.getCacheType(),
+                totalCount, index, status, new Date().getTime());
+        cacheProgressStatus.writeToPreferences();
         // Send cache status by handlers
         for(Handler handler : progressHandlers) {
             Message message = new Message();
             message.what = ProgressMessage;
             Bundle bundle = new Bundle();
-            bundle.putParcelable(ProgressMessageKey, new CacheProgressStatus(
-                    cacheTask.getChannel().getChannelName(), cacheTask.getCacheType(),
-                    totalCount, index, status, new Date().getTime()));
+            bundle.putParcelable(ProgressMessageKey, cacheProgressStatus);
             message.setData(bundle);
             handler.sendMessage(message);
         }
-        // Log.i("Progress", cacheTask.getChannel().getChannelName() + index + "/" + totalCount);
     }
 
     class DigestResponseListener implements Response.Listener<JSONObject> {
