@@ -17,6 +17,9 @@ import java.util.Map;
 public abstract class ChannelsManager {
     private Map<Channel, ChannelFragment> channelFragmentMap = new HashMap<Channel, ChannelFragment>();
     public ChannelFragment getOrCreateFragmentForChannel(Channel channel) {
+        if(channel == null) {
+            return null;
+        }
         if(channelFragmentMap.containsKey(channel)) {
             return channelFragmentMap.get(channel);
         }

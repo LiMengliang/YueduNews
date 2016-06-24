@@ -19,6 +19,7 @@ import android.widget.TextView;
 // import com.redoc.yuedu.news.view.channels.BitmapCache;
 
 import com.redoc.yuedu.R;
+import com.redoc.yuedu.YueduApplication;
 import com.redoc.yuedu.bean.Category;
 import com.redoc.yuedu.controller.CategoriesManager;
 
@@ -27,19 +28,12 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private CategoriesManager categoriesManager = new CategoriesManager(this);
+    private CategoriesManager categoriesManager;
     private LinearLayout categorySelectorBar;
     private LayoutInflater layoutInflater;
-    private Map<View, Category> categoryButtonAndName = new HashMap<View, Category>();
+    private Map<View, Category> categoryButtonAndName = new HashMap<>();
     private Fragment currentActiveFragment;
     private Category currentSelectedCategory;
-//
-    // public static RequestQueue VolleyRequestQueue;
-    // public static BitmapCache BitmapCache;
-
-    public CategoriesManager getCategoriesManager() {
-        return categoriesManager;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +42,9 @@ public class MainActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         categorySelectorBar = (LinearLayout)findViewById(R.id.categorySelectorBar);
         layoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        categoriesManager = YueduApplication.getCategoriesManager();
         initializeCategories();
         addFirstCategoryFragment(categoriesManager.getCategories().get(0));
-        // VolleyRequestQueue = Volley.newRequestQueue(this);
-        // BitmapCache = new BitmapCache();
     }
 
     private void initializeCategories() {

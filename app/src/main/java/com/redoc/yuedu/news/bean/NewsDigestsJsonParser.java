@@ -27,7 +27,7 @@ public class NewsDigestsJsonParser {
     public static NewsDigestsJsonParser instance = new NewsDigestsJsonParser();
 
     public List<NewsDigest> parseJsonToNewsDigestModels(JSONObject jsonObject,
-                                                                  NewsChannel channel) throws JSONException {
+                                                        Channel channel) throws JSONException {
         List<NewsDigest> newsDigests = new ArrayList<NewsDigest>();
         JSONArray jsonArray = jsonObject.getJSONArray(channel.getChannelId());
         for(int i = 0; i < jsonArray.length(); i++) {

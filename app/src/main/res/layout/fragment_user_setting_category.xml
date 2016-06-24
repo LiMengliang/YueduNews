@@ -82,6 +82,38 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="@color/gray"/>
+        <!--定时下载-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/automatic_cache"
+                android:textSize="@dimen/media_size_text"/>
+            <TextView
+                android:id="@+id/cache_time_schedule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:text="8:00"
+                android:textColor="@color/black"
+                android:textSize="@dimen/media_size_text"
+                android:layout_toLeftOf="@+id/auto_cache" />
+            <CheckBox
+                android:id="@+id/auto_cache"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="false"
+                android:layout_alignBottom="@+id/cache_time_schedule"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray"/>
         <!--收藏-->
         <RelativeLayout
             android:id="@+id/favorite_view"

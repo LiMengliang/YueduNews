@@ -14,8 +14,8 @@ public abstract class CacheableChannel extends Channel {
     protected CacheableChannel(Parcel in) {
         super(in);
     }
-    protected CacheableChannel(String channelName, String channelId, String httpLinkFormat, int weight) {
-        super(channelName, channelId, httpLinkFormat, weight);
+    protected CacheableChannel(String channelName, String channelId, String httpLinkFormat, int weight, boolean selected) {
+        super(channelName, channelId, httpLinkFormat, weight, selected);
     }
 
     public abstract List<CacheTask> detectMoreCacheTaskFromDigest(JSONObject value, CacheTask currentTask);

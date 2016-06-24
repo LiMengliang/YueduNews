@@ -1,17 +1,19 @@
 package com.redoc.yuedu.news.controller;
 
+import android.content.ContentProvider;
+import android.content.ContentValues;
 import android.content.Context;
 
 import com.redoc.yuedu.bean.Channel;
+import com.redoc.yuedu.contentprovider.ChannelProviderUtils;
+import com.redoc.yuedu.contentprovider.ado.DatabaseUtils;
 import com.redoc.yuedu.controller.ChannelsManager;
 import com.redoc.yuedu.controller.DigestsAdapter;
-import com.redoc.yuedu.news.bean.AllNewsChannels;
 import com.redoc.yuedu.news.bean.NewsChannel;
 import com.redoc.yuedu.utilities.preference.PreferenceUtilities;
 import com.redoc.yuedu.view.ChannelFragment;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,62 +29,17 @@ public class NewsChannelsManager extends ChannelsManager {
     protected List<NewsChannel> getAllChannels() {
         return allChannels;
     }
-
-    public static String SelectedChannelsPreferenceKey = "SelectedChannelsKey";
-    public static String SelectedChannelsPreferenceFileName = "SelectedChannelsPreferenceFile";
-
     private Map<Channel, DigestsAdapter> channelAndDigestsAdapterMap = new HashMap<>();
-
     private List<NewsChannel> userSelectedChannels;
+
     public NewsChannelsManager(Context context) {
         this.context = context;
-        allChannels = new ArrayList<NewsChannel>() {
-            {
-                add(AllNewsChannels.headLine);
-                add(AllNewsChannels.entertainment);
-                add(AllNewsChannels.finance);
-                add(AllNewsChannels.tech);
-                add(AllNewsChannels.cba);
-                add(AllNewsChannels.joke);
-                add(AllNewsChannels.automobile);
-                add(AllNewsChannels.fasion);
-                add(AllNewsChannels.beijin);
-                add(AllNewsChannels.war);
-                add(AllNewsChannels.realestate);
-                add(AllNewsChannels.eGame);
-                add(AllNewsChannels.pickOut);
-                add(AllNewsChannels.emotion);
-                add(AllNewsChannels.movie);
-                add(AllNewsChannels.nba);
-                add(AllNewsChannels.digital);
-                add(AllNewsChannels.mobile);
-                add(AllNewsChannels.education);
-                add(AllNewsChannels.bbs);
-                add(AllNewsChannels.tourism);
-                add(AllNewsChannels.cellphone);
-                add(AllNewsChannels.sociaty);
-            }
-        };
+        allChannels = NewsChannelsProviderUtils.getNewsChannels();
         userSelectedChannels = new ArrayList<>();
-        if(PreferenceUtilities.containsKey(SelectedChannelsPreferenceFileName, SelectedChannelsPreferenceKey)) {
-            Set<String> selectedChannelsId = PreferenceUtilities.getStringSetValue(SelectedChannelsPreferenceFileName, SelectedChannelsPreferenceKey);
-            for(NewsChannel channel : allChannels) {
-                for(String id : selectedChannelsId) {
-                    if(id.equals(channel.getChannelId())) {
-                        addUserSelectedChannel(channel);
-                        break;
-                    }
-                }
+        for(NewsChannel channel : allChannels) {
+            if(channel.isSelected()) {
+                userSelectedChannels.add(channel);
             }
-        }
-        else {
-            addUserSelectedChannel(AllNewsChannels.headLine);
-            addUserSelectedChannel(AllNewsChannels.sociaty);
-            addUserSelectedChannel(AllNewsChannels.entertainment);
-            addUserSelectedChannel(AllNewsChannels.cellphone);
-            addUserSelectedChannel(AllNewsChannels.digital);
-            addUserSelectedChannel(AllNewsChannels.automobile);
-            addUserSelectedChannel(AllNewsChannels.realestate);
         }
     }
 
@@ -103,7 +60,9 @@ public class NewsChannelsManager extends ChannelsManager {
             userSelectedChannels.add((NewsChannel)channel);
             channel.setSelected(true);
         }
-        PreferenceUtilities.writeToPreference(SelectedChannelsPreferenceFileName, SelectedChannelsPreferenceKey, getSelectedChannelsId());
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseUtils.SELECTED, 1);
+        ChannelProviderUtils.updateChannel(contentValues, channel.getChannelId());
     }
 
     @Override
@@ -112,7 +71,9 @@ public class NewsChannelsManager extends ChannelsManager {
             userSelectedChannels.remove(channel);
             channel.setSelected(false);
         }
-        PreferenceUtilities.writeToPreference(SelectedChannelsPreferenceFileName, SelectedChannelsPreferenceKey, getSelectedChannelsId());
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseUtils.SELECTED, 0);
+        ChannelProviderUtils.updateChannel(contentValues, channel.getChannelId());
     }
 
     @Override
@@ -126,6 +87,9 @@ public class NewsChannelsManager extends ChannelsManager {
 
     @Override
     protected DigestsAdapter getSupportDigestsAdapter(Channel channel) {
+        if(channel == null) {
+            return null;
+        }
         // TODO: Different channel may have different digest adapter
         if(!channelAndDigestsAdapterMap.containsKey(channel) && channel.getClass() == NewsChannel.class) {
             DigestsAdapter digestsAdapter = new NewsDigestsAdapter(context, (NewsChannel)channel);

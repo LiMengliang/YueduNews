@@ -26,6 +26,7 @@
     <string name="night_mode">夜间</string>
     <string name="offline">离线</string>
     <string name="setting">设置</string>
+    <string name="automatic_cache">定时下载</string>
     <string name="title_activity_offline_download">OfflineDownloadActivity</string>
     <string name="downloading">正在下载 </string>
 

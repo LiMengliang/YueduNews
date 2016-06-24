@@ -20,8 +20,8 @@ public class NewsChannel extends CacheableChannel {
     protected NewsChannel(Parcel in) {
         super(in);
     }
-    public NewsChannel(String channelName, String channelId, String httpLinkFormat, int weight) {
-        super(channelName, channelId, httpLinkFormat, weight);
+    public NewsChannel(String channelName, String channelId, String httpLinkFormat, int weight, boolean selected) {
+        super(channelName, channelId, httpLinkFormat, weight, selected);
     }
 
     public static final Creator<NewsChannel> CREATOR = new Creator<NewsChannel>() {
