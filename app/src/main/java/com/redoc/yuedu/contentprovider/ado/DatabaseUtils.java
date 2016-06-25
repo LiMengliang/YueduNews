@@ -15,4 +15,5 @@ public class DatabaseUtils {
     public static String SELECTED = "Selected";
     public static String CAN_CACHE = "CanCache";
     public static String WEIGHT = "Weight";
+    public static String NEED_CACHE = "NeedCache";
 }

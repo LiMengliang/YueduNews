@@ -20,7 +20,11 @@ public class OfflineCacheUtils {
     private final static String Min = "MIN";
     private final static String Second = "SECOND";
     private final static String AutoCacheEnabled = "AUTO_CACHE_ENABLED";
-    public static final int TIME_INTERVAL=1000*60*60*24;//set the interval of the alarm repeating
+    public static final int TIME_INTERVAL=1000*60*60*24;
+    public static final String CACHE_ACTION = "CacheAction";
+    public static final int START_CACHE = 1;
+    public static final int RESUME_CACHE = 2;
+    public static final int PAUSE_CACHE = 3;
 
     public static void writeOfflineCacheScheduleToPreference(Calendar calendar) {
         PreferenceUtilities.writeToPreference(PreferenceFileName, Hour, calendar.get(Calendar.HOUR_OF_DAY));
@@ -37,7 +41,7 @@ public class OfflineCacheUtils {
         int min = PreferenceUtilities.getIntValue(PreferenceFileName, Min);
         int second = PreferenceUtilities.getIntValue(PreferenceFileName, Second);
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR, hour);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, min);
         calendar.set(Calendar.SECOND, second);
         return calendar;
@@ -48,9 +52,10 @@ public class OfflineCacheUtils {
     }
 
     public static void setOfflineCacheSchedule(Calendar calendar) {
+        Intent intent = new Intent(YueduApplication.Context, OfflineCacheService.class);
+        intent.putExtra(OfflineCacheUtils.CACHE_ACTION, OfflineCacheUtils.START_CACHE);
         PendingIntent pendingIntent = PendingIntent.getService(YueduApplication.Context, 0,
-                new Intent(YueduApplication.Context, OfflineCacheService.class),
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager =(AlarmManager)YueduApplication.Context.getSystemService(
                 Context.ALARM_SERVICE);
@@ -65,7 +70,6 @@ public class OfflineCacheUtils {
                 Integer.toString(minute);
         String hourOfDay = hour < 10 ? "0" + Integer.toString(hour) :
                 Integer.toString(hour);
-        String time = hourOfDay + ":" + min;
-        return time;
+        return hourOfDay + ":" + min;
     }
 }

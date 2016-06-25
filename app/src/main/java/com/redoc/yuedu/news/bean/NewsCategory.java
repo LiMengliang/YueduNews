@@ -3,7 +3,7 @@ package com.redoc.yuedu.news.bean;
 import android.content.ContentValues;
 
 import com.redoc.yuedu.bean.CacheableCategory;
-import com.redoc.yuedu.bean.CacheableChannel;
+import com.redoc.yuedu.bean.Channel;
 import com.redoc.yuedu.bean.MultiChannelCategory;
 import com.redoc.yuedu.contentprovider.ChannelProviderUtils;
 import com.redoc.yuedu.contentprovider.ado.DatabaseUtils;
@@ -27,17 +27,17 @@ public class NewsCategory extends MultiChannelCategory implements CacheableCateg
         return new ArrayList<String>(){
             {
                 add("insert into channels (Id, ChannelId, ChannelName, CategoryId, LinkFormat, " +
-                        "Selected, CanCache, Weight) values (1, \"T1348647909107\", \"头条\", \"NEWSCATEGORY\"," +
-                        " \"http://c.m.163.com/nc/article/headline/T1348647909107/%d-20.html\", 1, 1, 1)");
+                        "Selected, CanCache, Weight, NeedCache) values (1, \"T1348647909107\", \"头条\", \"NEWSCATEGORY\"," +
+                        " \"http://c.m.163.com/nc/article/headline/T1348647909107/%d-20.html\", 1, 1, 1, 0)");
                 add("insert into channels (Id, ChannelId, ChannelName, CategoryId, LinkFormat, " +
-                        "Selected, CanCache, Weight) values (2, \"T1348648517839\", \"娱乐\", \"NEWSCATEGORY\"," +
-                        " \"http://c.m.163.com/nc/article/list/T1348648517839/%d-20.html\", 1, 1, 2)");
+                        "Selected, CanCache, Weight, NeedCache) values (2, \"T1348648517839\", \"娱乐\", \"NEWSCATEGORY\"," +
+                        " \"http://c.m.163.com/nc/article/list/T1348648517839/%d-20.html\", 1, 1, 2, 0)");
                 add("insert into channels (Id, ChannelId, ChannelName, CategoryId, LinkFormat, " +
-                        "Selected, CanCache, Weight) values (3, \"T1349837698345\", \"社会\", \"NEWSCATEGORY\"," +
-                        " \"http://c.m.163.com/nc/article/list/T1349837698345/%d-20.html\", 1, 1, 3)");
+                        "Selected, CanCache, Weight, NeedCache) values (3, \"T1349837698345\", \"社会\", \"NEWSCATEGORY\"," +
+                        " \"http://c.m.163.com/nc/article/list/T1349837698345/%d-20.html\", 1, 1, 3, 0)");
                 add("insert into channels (Id, ChannelId, ChannelName, CategoryId, LinkFormat, " +
-                        "Selected, CanCache, Weight) values (4, \"T1348648756099\", \"财经\", \"NEWSCATEGORY\"," +
-                        " \"http://c.m.163.com/nc/article/list/T1348648756099/%d-20.html\", 1, 0, 4)");
+                        "Selected, CanCache, Weight, NeedCache) values (4, \"T1348648756099\", \"财经\", \"NEWSCATEGORY\"," +
+                        " \"http://c.m.163.com/nc/article/list/T1348648756099/%d-20.html\", 1, 0, 4, 0)");
             }
         };
     }
@@ -61,7 +61,7 @@ public class NewsCategory extends MultiChannelCategory implements CacheableCateg
     // }
 
     @Override
-    public ArrayList<CacheableChannel> getChannelCacheInfo() {
+    public ArrayList<Channel> getChannelCacheInfo() {
         return NewsChannelsProviderUtils.getNewsCacheableChannels();
     }
 }

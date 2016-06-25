@@ -6,5 +6,5 @@ import java.util.ArrayList;
  * Created by limen on 2016/5/13.
  */
 public interface CacheableCategory {
-    ArrayList<CacheableChannel> getChannelCacheInfo();
+    ArrayList<Channel> getChannelCacheInfo();
 }

@@ -8,6 +8,7 @@ import com.redoc.yuedu.R;
 import com.redoc.yuedu.YueduApplication;
 import com.redoc.yuedu.bean.CacheableCategory;
 import com.redoc.yuedu.bean.Category;
+import com.redoc.yuedu.bean.Channel;
 import com.redoc.yuedu.bean.SingleChannelCategory;
 import com.redoc.yuedu.news.bean.NewsCategory;
 import com.redoc.yuedu.news.controller.NewsChannelsManager;
@@ -41,8 +42,8 @@ public class CategoriesManager {
         return categories;
     }
 
-    public ArrayList<Parcelable> getChacheableChannels() {
-        ArrayList<Parcelable> cacheableChannels = new ArrayList<>();
+    public ArrayList<Channel> getChacheableChannels() {
+        ArrayList<Channel> cacheableChannels = new ArrayList<>();
         for(Category category : categories) {
             if(CacheableCategory.class.isAssignableFrom(category.getClass())) {
                 cacheableChannels.addAll(((CacheableCategory) category).getChannelCacheInfo());

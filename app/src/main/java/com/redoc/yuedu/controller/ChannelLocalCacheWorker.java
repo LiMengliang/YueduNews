@@ -1,6 +1,7 @@
 package com.redoc.yuedu.controller;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,10 +13,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.redoc.yuedu.YueduApplication;
 import com.redoc.yuedu.bean.CacheProgressStatus;
 import com.redoc.yuedu.bean.CacheTask;
 import com.redoc.yuedu.bean.CacheType;
-import com.redoc.yuedu.bean.CacheableChannel;
+import com.redoc.yuedu.bean.Channel;
 import com.redoc.yuedu.utilities.cache.ACacheUtilities;
 import com.redoc.yuedu.utilities.network.LoadImageUtilities;
 import com.redoc.yuedu.utilities.network.VolleyUtilities;
@@ -66,16 +68,8 @@ public class ChannelLocalCacheWorker {
         return cacheProgressStatus;
     }
 
-    // public void setCacheProgressStatus(CacheProgressStatus progressStatus) {
-    //     cacheProgressStatus = progressStatus;
-    // }
-
     public long getLastCacheTime() {
         return lastCacheTime;
-    }
-
-    public void AddHandler(Handler handler) {
-        progressHandlers.add(handler);
     }
 
     public static String getChannelCacheKey(String httpLink, boolean userCache) {
@@ -85,7 +79,7 @@ public class ChannelLocalCacheWorker {
         return httpLink;
     }
 
-    public void startCache(List<CacheableChannel> channelsToCache, Context context) {
+    public void startCache(List<Channel> channelsToCache, Context context) {
         this.status = CacheStatus.InProgress;
         this.context = context;
         this.currentExecutingTaskIndex = -1;
@@ -103,14 +97,16 @@ public class ChannelLocalCacheWorker {
         executeNextDigestsTask();
     }
 
-    private List<CacheTask> generateDigestCacheTasks(List<CacheableChannel> channels) {
+    private List<CacheTask> generateDigestCacheTasks(List<Channel> channels) {
         List<CacheTask> tasks = new ArrayList<>();
-        for(CacheableChannel channel : channels) {
-            int tempIndex = 0;
-            while(tempIndex < maxDigestsToCache) {
-                String httpLink = channel.getHttpLink(tempIndex);
-                tasks.add(new CacheTask(httpLink, channel, CacheType.Digest));
-                tempIndex += 20;
+        for(Channel channel : channels) {
+            if(channel.isNeedCache()) {
+                int tempIndex = 0;
+                while(tempIndex < maxDigestsToCache) {
+                    String httpLink = channel.getHttpLink(tempIndex);
+                    tasks.add(new CacheTask(httpLink, channel, CacheType.Digest));
+                    tempIndex += 20;
+                }
             }
         }
         return tasks;
@@ -180,15 +176,11 @@ public class ChannelLocalCacheWorker {
         cacheProgressStatus = new CacheProgressStatus(cacheTask.getChannel().getChannelName(), cacheTask.getCacheType(),
                 totalCount, index, status, new Date().getTime());
         cacheProgressStatus.writeToPreferences();
-        // Send cache status by handlers
-        for(Handler handler : progressHandlers) {
-            Message message = new Message();
-            message.what = ProgressMessage;
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(ProgressMessageKey, cacheProgressStatus);
-            message.setData(bundle);
-            handler.sendMessage(message);
-        }
+
+        Intent intent = new Intent();
+        intent.setAction("com.redoc.yuedu.CACHE_PROGRESS_UPDATED");
+        intent.putExtra(ProgressMessageKey, cacheProgressStatus);
+        YueduApplication.Context.sendBroadcast(intent);
     }
 
     class DigestResponseListener implements Response.Listener<JSONObject> {
@@ -209,7 +201,7 @@ public class ChannelLocalCacheWorker {
             }
             task.setExecuted(true);
             // Add more task to tasks
-            CacheableChannel channel = task.getChannel();
+            Channel channel = task.getChannel();
             tasks.addAll(channel.detectMoreCacheTaskFromDigest(value, task));
 
             if(status == CacheStatus.InProgress) {

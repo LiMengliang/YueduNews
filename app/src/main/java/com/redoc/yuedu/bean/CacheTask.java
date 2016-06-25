@@ -5,11 +5,11 @@ package com.redoc.yuedu.bean;
  */
 public class CacheTask {
     private CacheType cacheType;
-    private CacheableChannel channel;
+    private Channel channel;
     private boolean executed;
     private String httpLink;
 
-    public CacheTask(String httpLink, CacheableChannel channel, CacheType cacheType) {
+    public CacheTask(String httpLink, Channel channel, CacheType cacheType) {
         this.httpLink = httpLink;
         this.cacheType = cacheType;
         this.channel = channel;
@@ -19,7 +19,7 @@ public class CacheTask {
         return cacheType;
     }
 
-    public CacheableChannel getChannel() {
+    public Channel getChannel() {
         return channel;
     }
 

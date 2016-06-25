@@ -3,7 +3,6 @@ package com.redoc.yuedu.news.controller;
 import android.database.Cursor;
 
 import com.redoc.yuedu.YueduApplication;
-import com.redoc.yuedu.bean.CacheableChannel;
 import com.redoc.yuedu.bean.Channel;
 import com.redoc.yuedu.contentprovider.ChannelsProvider;
 import com.redoc.yuedu.contentprovider.ado.DatabaseUtils;
@@ -41,17 +40,18 @@ public class NewsChannelsProviderUtils {
             boolean selected = cursor.getInt(5) == 1;
             int canCache = cursor.getInt(6);
             int weight = cursor.getInt(7);
-            channels.add(new NewsChannel(channelName, channelId, linkFormat, weight, selected));
+            boolean needCache = cursor.getInt(8) == 1;
+            channels.add(new NewsChannel(channelName, channelId, linkFormat, weight, selected, needCache));
         }
         cursor.close();
         return channels;
     }
 
-    public static ArrayList<CacheableChannel> getNewsCacheableChannels() {
+    public static ArrayList<Channel> getNewsCacheableChannels() {
         Cursor cursor = YueduApplication.Context.getContentResolver().query(ChannelsProvider.CacheableChannelsUri,
                 null, DatabaseUtils.CATEGORY_ID + "=?",
                 new String[] { NewsCategory.NewsCategoryId }, "ASC");
-        ArrayList<CacheableChannel> channels = new ArrayList<>();
+        ArrayList<Channel> channels = new ArrayList<>();
         while(cursor.moveToNext()) {
             String channelId = cursor.getString(1);
             String channelName = cursor.getString(2);
@@ -59,7 +59,8 @@ public class NewsChannelsProviderUtils {
             boolean selected = cursor.getInt(5) == 1;
             int canCache = cursor.getInt(6);
             int weight = cursor.getInt(7);
-            channels.add(new NewsChannel(channelName, channelId, linkFormat, weight, selected));
+            boolean needCache = cursor.getInt(8) == 1;
+            channels.add(new NewsChannel(channelName, channelId, linkFormat, weight, selected, needCache));
         }
         return channels;
     }

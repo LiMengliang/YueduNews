@@ -4,7 +4,6 @@ import android.os.Parcel;
 
 import com.redoc.yuedu.bean.CacheTask;
 import com.redoc.yuedu.bean.CacheType;
-import com.redoc.yuedu.bean.CacheableChannel;
 import com.redoc.yuedu.bean.Channel;
 
 import org.json.JSONException;
@@ -16,12 +15,13 @@ import java.util.List;
 /**
  * Created by limen on 2016/4/30.
  */
-public class NewsChannel extends CacheableChannel {
+public class NewsChannel extends Channel {
     protected NewsChannel(Parcel in) {
         super(in);
     }
-    public NewsChannel(String channelName, String channelId, String httpLinkFormat, int weight, boolean selected) {
-        super(channelName, channelId, httpLinkFormat, weight, selected);
+    public NewsChannel(String channelName, String channelId, String httpLinkFormat, int weight,
+                       boolean selected, boolean needCache) {
+        super(channelName, channelId, httpLinkFormat, weight, selected, needCache);
     }
 
     public static final Creator<NewsChannel> CREATOR = new Creator<NewsChannel>() {

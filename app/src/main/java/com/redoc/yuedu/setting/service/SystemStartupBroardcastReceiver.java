@@ -24,7 +24,7 @@ public class SystemStartupBroardcastReceiver extends BroadcastReceiver {
         toast.show();
         if(OfflineCacheUtils.getAutoCacheEnabledFromPreference()) {
             // setCacheAlarmAction();
-            Toast toast2 = Toast.makeText(context, "Set alarm", Toast.LENGTH_LONG);
+            Toast toast2 = Toast.makeText(context, "Set al", Toast.LENGTH_LONG);
             toast2.show();
             OfflineCacheUtils.setOfflineCacheSchedule(OfflineCacheUtils.getOfflineCacheScheduleFromPreference());
         }

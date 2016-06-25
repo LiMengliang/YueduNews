@@ -21,7 +21,8 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CHANNELS_TABLE = "Create table channels(Id integer primary key AutoIncrement," +
                 " ChannelId varchar(20), ChannelName varchar(20), CategoryId varchar(20)," +
-                " LinkFormat varchar(200), Selected integer, CanCache integer, Weight integer)";
+                " LinkFormat varchar(200), Selected integer, CanCache integer, Weight integer," +
+                " NeedCache integer)";
         db.execSQL(CREATE_CHANNELS_TABLE);
         for (Category category : categoriesManager.getCategories()) {
             for(String sql : category.getChannelsCreationSQL()) {

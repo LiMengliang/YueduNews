@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +24,7 @@ import com.redoc.yuedu.YueduApplication;
 import com.redoc.yuedu.bean.CacheProgressStatus;
 import com.redoc.yuedu.controller.CacheStatus;
 import com.redoc.yuedu.controller.ChannelLocalCacheWorker;
+import com.redoc.yuedu.setting.service.OfflineCacheProgressSimpleBroadcastReceiver;
 import com.redoc.yuedu.setting.utilities.OfflineCacheUtils;
 import com.redoc.yuedu.utilities.cache.ACacheUtilities;
 import com.redoc.yuedu.utilities.cache.CacheUtilities;
@@ -54,8 +56,6 @@ public class UserSettingCategoryFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-
-
         View rootView = inflater.inflate(R.layout.fragment_user_setting_category, null, false);
         settingView = rootView.findViewById(R.id.setting_view);
         offlineView = rootView.findViewById(R.id.offline_view);
@@ -76,10 +76,14 @@ public class UserSettingCategoryFragment extends Fragment {
         if(cachedIcon != null) {
             userIcon.setImageBitmap(cachedIcon);
         }
-        WeakReference<UserSettingCategoryFragmentHandler> weakHandlerReference =
-                new WeakReference<>(new UserSettingCategoryFragmentHandler(cacheProgress));
-        ChannelLocalCacheWorker.getInstance().AddHandler(weakHandlerReference.get());
-
+        // WeakReference<UserSettingCategoryFragmentHandler> weakHandlerReference =
+        //         new WeakReference<>(new UserSettingCategoryFragmentHandler(cacheProgress));
+        // ChannelLocalCacheWorker.getInstance().AddHandler(weakHandlerReference.get());
+        // Register progress broadcast receiver
+        OfflineCacheProgressSimpleBroadcastReceiver receiver = new OfflineCacheProgressSimpleBroadcastReceiver(this);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.redoc.yuedu.CACHE_PROGRESS_UPDATED");
+        YueduApplication.Context.registerReceiver(receiver, intentFilter);
         return rootView;
     }
 
@@ -90,6 +94,26 @@ public class UserSettingCategoryFragment extends Fragment {
             if(!selectedPath.equals("")) {
                LoadImageUtilities.displayImage("file://"+selectedPath, userIcon);
             }
+        }
+    }
+
+    public void updateOfflineCacheProgress(CacheProgressStatus cacheProgressStatus) {
+        if(cacheProgressStatus.getCacheStatus() == CacheStatus.NotStarted) {
+            cacheProgress.setText("");
+            return;
+        }
+        switch (cacheProgressStatus.getCacheType()) {
+            case Digest:
+                cacheProgress.setText(YueduApplication.Context.getString(R.string.cache_status_downloading) +
+                        cacheProgressStatus.getChannelName() + CacheUtilities.getCacheTypeName(cacheProgressStatus.getCacheType()));
+                break;
+            case Image:
+                cacheProgress.setText(YueduApplication.Context.getString(R.string.cache_status_downloading) +
+                        cacheProgressStatus.getChannelName() + CacheUtilities.getCacheTypeName(cacheProgressStatus.getCacheType()) + " " +
+                        cacheProgressStatus.getCurrentIndex() + "/" + cacheProgressStatus.getTotalCount());
+                break;
+            case Detail:
+                break;
         }
     }
 

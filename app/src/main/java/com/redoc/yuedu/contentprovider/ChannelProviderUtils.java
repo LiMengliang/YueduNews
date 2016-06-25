@@ -23,7 +23,8 @@ public class ChannelProviderUtils {
      * LinkFormat varchar(200),
      * Selected integer,
      * CanCache integer,
-     * Weight integer
+     * Weight integer,
+     * NeedCache integer
      */
     public static List<Channel> getAllChannels() {
         Cursor cursor = YueduApplication.Context.getContentResolver().query(ChannelsProvider.ChannelsUri,
@@ -36,7 +37,8 @@ public class ChannelProviderUtils {
             boolean selected = cursor.getInt(5) == 1;
             int canCache = cursor.getInt(6);
             int weight = cursor.getInt(7);
-            channels.add(new Channel(channelName, channelId, linkFormat, weight, selected));
+            boolean needCache = cursor.getInt(8) == 1;
+            channels.add(new Channel(channelName, channelId, linkFormat, weight, selected, needCache));
         }
         cursor.close();
         return channels;
