@@ -20,8 +20,8 @@ import android.widget.TextView;
 
 import com.redoc.yuedu.R;
 import com.redoc.yuedu.YueduApplication;
-import com.redoc.yuedu.bean.Category;
-import com.redoc.yuedu.controller.CategoriesManager;
+import com.redoc.yuedu.model.Category;
+import com.redoc.yuedu.presenter.CategoriesManager;
 
 import java.util.HashMap;
 import java.util.Map;

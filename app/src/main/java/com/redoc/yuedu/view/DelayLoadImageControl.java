@@ -1,6 +1,6 @@
 package com.redoc.yuedu.view;
 
-import com.redoc.yuedu.bean.Digest;
+import com.redoc.yuedu.model.Digest;
 
 /**
  * Created by limen on 2016/5/2.

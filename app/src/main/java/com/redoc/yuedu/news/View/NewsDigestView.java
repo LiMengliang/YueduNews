@@ -9,9 +9,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.redoc.yuedu.R;
-import com.redoc.yuedu.bean.Digest;
+import com.redoc.yuedu.model.Digest;
 import com.redoc.yuedu.offlineCache.service.ChannelLocalCacheWorker;
-import com.redoc.yuedu.news.bean.NewsDigest;
+import com.redoc.yuedu.news.model.NewsDigest;
 import com.redoc.yuedu.utilities.cache.ACacheUtilities;
 import com.redoc.yuedu.utilities.network.LoadImageUtilities;
 import com.redoc.yuedu.utilities.network.NetworkUtilities;

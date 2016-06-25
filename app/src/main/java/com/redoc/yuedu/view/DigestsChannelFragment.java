@@ -6,17 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.redoc.yuedu.R;
-import com.redoc.yuedu.bean.Digest;
-import com.redoc.yuedu.controller.DigestsAdapter;
-import com.redoc.yuedu.utilities.network.LoadImageUtilities;
-import com.redoc.yuedu.utilities.network.NetworkUtilities;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.redoc.yuedu.model.Digest;
+import com.redoc.yuedu.presenter.DigestsAdapter;
 
 public class DigestsChannelFragment extends ChannelFragment {
 

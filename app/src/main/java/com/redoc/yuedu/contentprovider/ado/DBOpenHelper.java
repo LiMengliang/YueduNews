@@ -4,8 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.redoc.yuedu.bean.Category;
-import com.redoc.yuedu.controller.CategoriesManager;
+import com.redoc.yuedu.model.Category;
+import com.redoc.yuedu.presenter.CategoriesManager;
 
 /**
  * Created by limen on 2016/6/18.

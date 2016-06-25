@@ -21,11 +21,11 @@ import android.widget.TimePicker;
 
 import com.redoc.yuedu.R;
 import com.redoc.yuedu.YueduApplication;
-import com.redoc.yuedu.bean.CacheProgressStatus;
-import com.redoc.yuedu.controller.CacheStatus;
+import com.redoc.yuedu.model.CacheProgressStatus;
+import com.redoc.yuedu.presenter.CacheStatus;
 import com.redoc.yuedu.offlineCache.service.ChannelLocalCacheWorker;
 import com.redoc.yuedu.offlineCache.view.OfflineCacheActivity;
-import com.redoc.yuedu.setting.controller.OfflineCacheProgressSimpleBroadcastReceiver;
+import com.redoc.yuedu.setting.presenter.OfflineCacheProgressSimpleBroadcastReceiver;
 import com.redoc.yuedu.offlineCache.utilities.OfflineCacheUtils;
 import com.redoc.yuedu.utilities.cache.ACacheUtilities;
 import com.redoc.yuedu.utilities.cache.CacheUtilities;
