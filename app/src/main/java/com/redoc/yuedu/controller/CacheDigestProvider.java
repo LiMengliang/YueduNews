@@ -2,6 +2,7 @@ package com.redoc.yuedu.controller;
 
 import android.content.Context;
 
+import com.redoc.yuedu.offlineCache.service.ChannelLocalCacheWorker;
 import com.redoc.yuedu.bean.Channel;
 import com.redoc.yuedu.utilities.cache.ACacheUtilities;
 

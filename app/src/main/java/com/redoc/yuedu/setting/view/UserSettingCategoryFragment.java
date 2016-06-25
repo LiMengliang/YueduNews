@@ -23,14 +23,14 @@ import com.redoc.yuedu.R;
 import com.redoc.yuedu.YueduApplication;
 import com.redoc.yuedu.bean.CacheProgressStatus;
 import com.redoc.yuedu.controller.CacheStatus;
-import com.redoc.yuedu.controller.ChannelLocalCacheWorker;
-import com.redoc.yuedu.setting.service.OfflineCacheProgressSimpleBroadcastReceiver;
-import com.redoc.yuedu.setting.utilities.OfflineCacheUtils;
+import com.redoc.yuedu.offlineCache.service.ChannelLocalCacheWorker;
+import com.redoc.yuedu.offlineCache.view.OfflineCacheActivity;
+import com.redoc.yuedu.setting.controller.OfflineCacheProgressSimpleBroadcastReceiver;
+import com.redoc.yuedu.offlineCache.utilities.OfflineCacheUtils;
 import com.redoc.yuedu.utilities.cache.ACacheUtilities;
 import com.redoc.yuedu.utilities.cache.CacheUtilities;
 import com.redoc.yuedu.utilities.network.LoadImageUtilities;
 
-import java.lang.ref.WeakReference;
 import java.util.Calendar;
 
 /**

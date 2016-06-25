@@ -1,11 +1,11 @@
-package com.redoc.yuedu.setting.service;
+package com.redoc.yuedu.setting.controller;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
 import com.redoc.yuedu.bean.CacheProgressStatus;
-import com.redoc.yuedu.controller.ChannelLocalCacheWorker;
+import com.redoc.yuedu.offlineCache.service.ChannelLocalCacheWorker;
 import com.redoc.yuedu.setting.view.UserSettingCategoryFragment;
 
 public class OfflineCacheProgressSimpleBroadcastReceiver extends BroadcastReceiver {

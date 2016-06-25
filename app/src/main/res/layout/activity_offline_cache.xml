@@ -4,7 +4,7 @@
     xmlns:yuedu="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.redoc.yuedu.setting.view.OfflineCacheActivity"
+    tools:context=".offlineCache.view.OfflineCacheActivity"
     android:orientation="vertical">
     <com.redoc.yuedu.view.widget.ToolBar
         android:id="@+id/toolbar"
