@@ -32,7 +32,8 @@
             android:name=".view.MainActivity"
             android:label="@string/title_activity_main"
             android:launchMode="singleTask"
-            android:taskAffinity="com.redoc.yuedu.MainActivity" />
+            android:taskAffinity="com.redoc.yuedu.MainActivity"
+            android:theme="@style/AppTheme.Base"  />
 
         <!-- OfflineCache Activity -->
         <activity

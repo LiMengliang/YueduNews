@@ -21,7 +21,6 @@ import java.util.zip.Inflater;
  * Created by limen on 2016/5/29.
  */
 public class ToolBar extends RelativeLayout {
-    private View rootView;
     private TextView titleText;
     private Button rightButton;
     private LinearLayout backButton;
@@ -64,14 +63,4 @@ public class ToolBar extends RelativeLayout {
     public void setEnableToRightButton(boolean enabled) {
         rightButton.setEnabled(enabled);
     }
-
-    // public ToolBar(Context context) {
-    //     super(context);
-    //     rootView = ((LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_action_bar, null);
-    //     titleText = (TextView)rootView.findViewById(R.id.toolbar_title);
-    //     rightButton = (Button)rootView.findViewById(R.id.toolbar_right_buttom);
-    //     // titleText.setText(title);
-    //     // rightButton.setText(rightButtonText);
-    //     // rightButton.setOnClickListener(rightButtonOnClickListener);
-    // }
 }

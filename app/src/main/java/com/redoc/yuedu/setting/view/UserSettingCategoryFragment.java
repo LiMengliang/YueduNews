@@ -92,7 +92,7 @@ public class UserSettingCategoryFragment extends Fragment {
         if(requestCode == SelectIconRequest && resultCode == Activity.RESULT_OK) {
             String selectedPath = data.getExtras().getString(ImageSelectionActivity.selectedIconPath);
             if(!selectedPath.equals("")) {
-               LoadImageUtilities.displayImage("file://"+selectedPath, userIcon);
+               LoadImageUtilities.displayLocalImage("file://"+selectedPath, userIcon);
             }
         }
     }
