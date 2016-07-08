@@ -32,11 +32,12 @@
             android:name=".view.MainActivity"
             android:label="@string/title_activity_main"
             android:launchMode="singleTask"
-            android:taskAffinity="com.redoc.yuedu.MainActivity" />
+            android:taskAffinity="com.redoc.yuedu.MainActivity"
+            android:theme="@style/AppTheme.Base"  />
 
         <!-- OfflineCache Activity -->
         <activity
-            android:name=".setting.view.OfflineCacheActivity"
+            android:name=".offlineCache.view.OfflineCacheActivity"
             android:label="@string/offline_label"
             android:theme="@style/AppTheme.Base" />
         <activity android:name=".setting.view.ImageSelectionActivity" />
@@ -55,7 +56,7 @@
             android:exported="false" />
 
         <receiver
-            android:name=".setting.service.SystemStartupBroardcastReceiver"
+            android:name=".offlineCache.service.SystemStartupBroardcastReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -66,7 +67,7 @@
         </receiver>
 
         <service
-            android:name=".setting.service.OfflineCacheService"
+            android:name=".offlineCache.service.OfflineCacheService"
             android:enabled="true"
             android:exported="false" />
 

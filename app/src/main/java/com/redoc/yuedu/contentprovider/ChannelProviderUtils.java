@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.redoc.yuedu.YueduApplication;
-import com.redoc.yuedu.bean.Channel;
+import com.redoc.yuedu.model.Channel;
 import com.redoc.yuedu.contentprovider.ado.DatabaseUtils;
 
 import java.util.ArrayList;

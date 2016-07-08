@@ -91,7 +91,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/automatic_cache"
-                android:textSize="@dimen/media_size_text"/>
+                android:textSize="@dimen/media_size_text"
+                android:id="@+id/textView" />
             <TextView
                 android:id="@+id/cache_time_schedule"
                 android:layout_width="wrap_content"
@@ -105,10 +106,14 @@
                 android:id="@+id/auto_cache"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:focusableInTouchMode="false"
                 android:layout_alignBottom="@+id/cache_time_schedule"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentEnd="true"
+                android:focusableInTouchMode="false"
+                android:checked="true"
+                android:singleLine="false"
+                style="@style/checkBox_style"/>
+
         </RelativeLayout>
         <View
             android:layout_width="match_parent"

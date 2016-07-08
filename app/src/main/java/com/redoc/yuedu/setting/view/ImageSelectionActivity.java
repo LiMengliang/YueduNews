@@ -15,7 +15,7 @@ import android.widget.GridView;
 
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.redoc.yuedu.R;
-import com.redoc.yuedu.setting.controller.AlbumnImagesAdapter;
+import com.redoc.yuedu.setting.presenter.AlbumnImagesAdapter;
 import com.redoc.yuedu.utilities.cache.ACacheUtilities;
 import com.redoc.yuedu.utilities.network.LoadImageUtilities;
 import com.redoc.yuedu.view.widget.ToolBar;

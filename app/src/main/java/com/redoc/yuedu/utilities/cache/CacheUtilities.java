@@ -2,7 +2,7 @@ package com.redoc.yuedu.utilities.cache;
 
 import com.redoc.yuedu.R;
 import com.redoc.yuedu.YueduApplication;
-import com.redoc.yuedu.bean.CacheType;
+import com.redoc.yuedu.model.CacheType;
 
 /**
  * Created by limen on 2016/5/22.

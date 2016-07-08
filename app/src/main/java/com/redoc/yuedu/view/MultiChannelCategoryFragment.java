@@ -11,23 +11,18 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.redoc.yuedu.R;
-import com.redoc.yuedu.bean.Channel;
-import com.redoc.yuedu.controller.ChannelAdapter;
-import com.redoc.yuedu.controller.ChannelsManager;
+import com.redoc.yuedu.model.Channel;
+import com.redoc.yuedu.presenter.ChannelAdapter;
+import com.redoc.yuedu.presenter.ChannelsManager;
 import com.redoc.yuedu.view.utilities.AnimationUtilities;
 
 /**

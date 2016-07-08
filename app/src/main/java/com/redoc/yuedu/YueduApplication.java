@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.redoc.yuedu.contentprovider.ado.DBOpenHelper;
-import com.redoc.yuedu.controller.CategoriesManager;
+import com.redoc.yuedu.presenter.CategoriesManager;
 import com.redoc.yuedu.utilities.network.LoadImageUtilities;
 import com.redoc.yuedu.utilities.network.VolleyUtilities;
 
