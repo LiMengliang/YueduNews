@@ -2,9 +2,16 @@
 <resources>
     <attr name="toolbar_title"/>
     <attr name="toolbar_button_text"/>
+    <attr name="toolbar_background"/>
+    <attr name="zoomable_image_source"/>
 
     <declare-styleable name="ToolbarWithButton">
         <attr name="toolbar_title"/>
         <attr name="toolbar_button_text"/>
+        <attr name="toolbar_background"/>
+    </declare-styleable>
+
+    <declare-styleable name="ZoomableImageViewer">
+        <attr name="zoomable_image_source"/>
     </declare-styleable>
 </resources>

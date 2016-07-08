@@ -2,6 +2,8 @@ package com.redoc.yuedu.view.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +48,8 @@ public class ToolBar extends RelativeLayout {
         if(rightButtonText != null) {
             rightButton.setText(rightButtonText);
         }
+        Drawable background = a.getDrawable(R.styleable.ToolbarWithButton_toolbar_background);
+        this.setBackground(background);
         a.recycle();
     }
 

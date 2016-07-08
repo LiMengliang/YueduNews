@@ -10,6 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        yuedu:toolbar_background="@color/mainColor"
         yuedu:toolbar_title="@string/offline_label"/>
     <RelativeLayout
         android:layout_height="@dimen/top_banner_area_height"

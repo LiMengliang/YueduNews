@@ -1,19 +1,33 @@
 package com.redoc.yuedu.view;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.redoc.yuedu.R;
+import com.redoc.yuedu.YueduApplication;
 import com.redoc.yuedu.bean.Digest;
 import com.redoc.yuedu.controller.DigestsAdapter;
+import com.redoc.yuedu.news.bean.Consts;
+import com.redoc.yuedu.news.bean.NewsDigest;
+import com.redoc.yuedu.news.controller.NewsDigestsAdapter;
 import com.redoc.yuedu.utilities.network.LoadImageUtilities;
 import com.redoc.yuedu.utilities.network.NetworkUtilities;
+import com.redoc.yuedu.utilities.network.VolleyUtilities;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +73,7 @@ public class DigestsChannelFragment extends ChannelFragment {
         mDigestsList.addFooterView(listFooter);
         mDigestsList.setAdapter(digestsAdapter);
         mDigestsList.setOnScrollListener(new DigestListOnScrollListener());
+        mDigestsList.setOnItemClickListener(new NewsDigestClickListener(digestsAdapter, getActivity()));
         // mDigestsList.setOnScrollListener(new PauseOnScrollListener(LoadImageUtilities.imageLoader, true, true));
         if(shouldRefreshChannel()) {
             digestsAdapter.fetchLatest();
@@ -120,6 +135,32 @@ public class DigestsChannelFragment extends ChannelFragment {
 
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        }
+    }
+
+    static class NewsDigestClickListener implements OnItemClickListener {
+        private DigestsAdapter digestsAdapter;
+        private Context context;
+
+        public NewsDigestClickListener(DigestsAdapter newsDigestsAdapter, Context context) {
+            digestsAdapter = newsDigestsAdapter;
+            this.context = context;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            NewsDigest newsDigest = (NewsDigest)digestsAdapter.getItem(position);
+            if(newsDigest.getPhotoSetId() != null) {
+                Intent intent = new Intent(context, ImageViewerActivity.class);
+                // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                String photoSetId = newsDigest.getPhotoSetId();
+                String path1 = photoSetId.substring("00AO".length(), photoSetId.indexOf('|'));
+                String path2 = photoSetId.substring(photoSetId.indexOf('|') + 1);
+                String photosetUrl = String.format("http://c.3g.163.com/photo/api/set/%s/%s.json",
+                        path1, path2);
+                intent.putExtra(Consts.PHOTO_SET_URL, photosetUrl);
+                context.startActivity(intent);
+            }
         }
     }
 }

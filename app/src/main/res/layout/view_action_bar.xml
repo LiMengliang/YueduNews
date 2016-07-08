@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/narrow_app_action_bar_height"
-    android:background="@color/mainColor">
+    android:layout_height="@dimen/narrow_app_action_bar_height">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -11,7 +10,8 @@
         <LinearLayout
             android:id="@+id/titleAndBack"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:minWidth="30dp">
             <ImageButton
                 android:id="@+id/back"
                 android:layout_width="@dimen/button_height"

@@ -53,4 +53,7 @@
     <!--Icon image selector view-->
     <string name="selected">使用</string>
     <string name="pictures">选择头像</string>
+
+    <!--Image viewer activity-->
+    <string name="loading">正在载入</string>
 </resources>
